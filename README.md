@@ -55,7 +55,7 @@ No Comercial: Usted no puede hacer uso del material con propósitos comerciales.
 
 ## Enlaces de interés 👀
 
-* [Tablero en Trello] - https://trello.com/b/lpjy1i1l/proyecto-skills
+* [Tablero en Trello] - https://trello.com/b/2sEaj5wX/skills
 
 * [Enlace a Diseños en Mockups] - 
 
