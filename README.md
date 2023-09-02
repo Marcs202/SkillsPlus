@@ -6,7 +6,7 @@ Es un proyecto pensado para conectar frelancers y empresas con profesionales par
 
 ## Herramientas Principales🛠️
 
-* [Figma] https://balsamiq.com/wireframes/mockups3fordesktop/ - Programa para formar diseños de nuestro proyecto.
+* [Figma] https://www.figma.com/- Programa para formar diseños de nuestro proyecto.
 
 * [diagrams.net] https://staruml.io - Será una herramienta muy necesaria para la realización de nuestros diagramas UML del
 sistema.
