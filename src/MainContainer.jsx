@@ -11,7 +11,7 @@ import SearchScreen from './Screens/SearchSC';
 
 //Nombre de las pantallas
 const homeName= 'Inicio';
-const detailsName = 'Detalles';
+const detailsName = 'Servicios';
 const searchName = 'Búsqueda';
 const profileName = 'Perfil';
 
