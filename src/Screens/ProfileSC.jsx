@@ -2,11 +2,14 @@ import { StatusBar } from "expo-status-bar";
 import React, {useState} from "react";
 import { StyleSheet, Text, View, TouchableOpacity  } from "react-native";
 import { HStack, Banner, Avatar } from "@react-native-material/core";
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Card, Button } from "react-native-paper";
 import { AntDesign } from '@expo/vector-icons'; 
 import Modal from 'react-native-modal';
 import CheckBox from 'react-native-checkbox';
+import { MainContainer } from "../MainContainer";
+
 export default function ProfileScreen({ navigation }) {
 
   const [isModalVisible, setModalVisible] = useState(false);
@@ -20,6 +23,10 @@ export default function ProfileScreen({ navigation }) {
     setSelectedOption(option);
     toggleModal();
   };
+  
+  const onSignInPressed = () =>{
+    MainContainer.navigate('SignIn');
+ }
 
   return (
     <>
@@ -51,9 +58,9 @@ export default function ProfileScreen({ navigation }) {
           type="font-awesome"
           color="#6F2C8C"
           size={30}
-          onPress={() => {
-            alert("2222");
-          }}
+          onPress={() => {   // Aqui deberia ir el evento para pasar al LOGIN 
+            alert("2222");   // onSignInPressed
+          }}       
         />
       
       <Modal isVisible={isModalVisible}>
@@ -82,7 +89,7 @@ export default function ProfileScreen({ navigation }) {
             size={80}
             rounded
             source={{
-              uri: "https://picsum.photos/702",
+              uri: "https://objectstorage.mx-queretaro-1.oraclecloud.com/n/axjm5wci2rqn/b/skillsImages/o/William.jpg",
             }}
           />
         )}
@@ -94,7 +101,7 @@ export default function ProfileScreen({ navigation }) {
               justifyContent: "center",
             }}
           >
-            Nombre del usuario
+            Jeffrey Reyes
           </Text>
         }
       ></Banner>
@@ -106,13 +113,13 @@ export default function ProfileScreen({ navigation }) {
       </View> */}
 
       <Card>
-        <Card.Title title="Nombre del servicio" />
+        <Card.Title title="Decoraciones para bodas" />
         <Card.Content>
           <Text variant="bodyMedium">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus
-            quaerat dignissimos ab nulla aut error officia ratione dicta soluta
-            quam eum deserunt animi facilis, quibusdam ea natus vitae iusto.
-            Corporis?
+            Mi nombre es Jeffrey Reyes, soy una persona que se caracteriza por brindar mis
+            servicios en Bodas, en lo que mi servicio se basa es en la organización de la
+            decoración, arreglos, mesas.
+            !Todo lo que quieres en tú boda con creatividad y esfuerzo se puede lograr¡
           </Text>
         </Card.Content>
         <Card.Cover source={{ uri: "https://picsum.photos/702" }} />
