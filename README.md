@@ -18,15 +18,15 @@ sitio web.
 
 ## Autores✒️
 
-* Jeffrey Xavier Portillo Saravia - 				
+* Jeffrey Xavier Portillo Saravia - Mixjeff			
 
-* Marcos de Jesús Hernández Sorto - 
+* Marcos de Jesús Hernández Sorto - Marcs20
 
-* William Ernesto Rodríguez Reyes -							
+* William Ernesto Rodríguez Reyes - williamre574					
 
-* José Manuel Rodríguez Lovo -
+* José Manuel Rodríguez Lovo - Rlovo34
 
-* José Ricardo Mejía Gámez 
+* José Ricardo Mejía Gámez - JRickMG
 
 
 
