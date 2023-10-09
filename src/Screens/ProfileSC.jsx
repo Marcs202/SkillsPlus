@@ -11,13 +11,20 @@ export default function ProfileScreen({ navigation }) {
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
-
+  const [showDetailScreen, setShowDetailScreen] = useState(true);
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
+   
+    if (option === 'Opción 1') {
+      setShowDetailScreen(false); 
+      alert('entro')
+    } else {
+      setShowDetailScreen(true); // Muestra DetailScreen
+    }
     toggleModal();
   };
 
