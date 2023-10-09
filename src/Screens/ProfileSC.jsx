@@ -8,35 +8,30 @@ import { Card, Button } from "react-native-paper";
 import { AntDesign } from '@expo/vector-icons'; 
 import Modal from 'react-native-modal';
 import CheckBox from 'react-native-checkbox';
-import { MainContainer } from "../MainContainer";
 
-export default function ProfileScreen({ navigation }) {
 
+export default function ProfileScreen({ updateDetailScreenVisibility}) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [showDetailScreen, setShowDetailScreen] = useState(true);
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
-   
     if (option === 'Opción 1') {
-      setShowDetailScreen(false); 
-      alert('entro')
+      updateDetailScreenVisibility(true); 
+     
     } else {
-      setShowDetailScreen(true); // Muestra DetailScreen
+      updateDetailScreenVisibility(false);
     }
     toggleModal();
   };
   
-  const onSignInPressed = () =>{
-    MainContainer.navigate('SignIn');
- }
-
+ 
   return (
     <>
+   
       <View
         style={{
           display: "flex",
@@ -49,6 +44,7 @@ export default function ProfileScreen({ navigation }) {
           justifyContent: "center",
         }}
       >
+       
         <AntDesign
           style={{ paddingRight: 20, marginLeft:300 }}
           name="swap"
@@ -61,6 +57,7 @@ export default function ProfileScreen({ navigation }) {
         />
 
         <AntDesign
+          style={{ paddingRight: 15 }}
           name="team"
           type="font-awesome"
           color="#6F2C8C"
@@ -134,6 +131,11 @@ export default function ProfileScreen({ navigation }) {
           <Button>Ver</Button>
         </Card.Actions>
       </Card>
+      
+       
+
+       
+    
     </>
   );
 }

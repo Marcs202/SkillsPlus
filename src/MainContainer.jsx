@@ -1,14 +1,15 @@
 import * as React from 'react';
+import { useState } from 'react'
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 //Pantallas
 import HomeScreen from "./Screens/HomeSC";
 import DetailScreen from "./Screens/DetailSC";
 import ProfileScreen from "./Screens/ProfileSC";
 import SearchScreen from "./Screens/SearchSC";
-
+import Signin from './Screens/Login/signin';
 //Nombre de las pantallas
 const homeName = "Inicio";
 const detailsName = "Servicios";
@@ -18,13 +19,16 @@ const profileName = "Perfil";
 const Tab = createBottomTabNavigator();
 
 export function MainContainer() {
-    const [showDetailScreen, setShowDetailScreen] = useState(true);
 
+    const [showDetailScreen, setShowDetailScreen] = useState(true);
+   
     const updateDetailScreenVisibility = (isVisible) => {
-        alert('pasa')
+        alert(isVisible)
         setShowDetailScreen(isVisible);
       };
+      
   return (
+    <>
     <NavigationContainer>
       <Tab.Navigator
         initialRouteName={homeName}
@@ -68,10 +72,17 @@ export function MainContainer() {
             <ProfileScreen
               {...props}
               updateDetailScreenVisibility={updateDetailScreenVisibility}
+           
             />
+            
           )}
         </Tab.Screen>
-      </Tab.Navigator>
+        </Tab.Navigator>
+    
+      
     </NavigationContainer>
+   
+    </>
+
   );
 }
