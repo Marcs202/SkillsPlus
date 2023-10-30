@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   Modal,
@@ -29,39 +29,39 @@ export default function HomeScreen({ navigation }) {
     setModalVisible(false);
   };
 
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    fetch("http://140.84.176.85:3000/categorias/")
+      .then((response) => response.json())
+      .then((data) => setImages(data))
+      .catch((error) => console.error(error));
+  }, []);
+
+  //para los perfiles
+
+  useEffect(() => {
+    fetch("http://140.84.176.85:3000/categorias/")
+      .then((response) => response.json())
+      .then((data) => {
+        setImages(data); 
+      })
+      .catch((error) => console.error(error));
+  }, []);
+  
+
   return (
     <ScrollView style={styles.contenedor}>
       <ScrollView horizontal>
-        <View>
-          <Image
-            source={require("../placeholderimgs/img1.jpg")}
-            style={styles.bubbleban}
-          />
-        </View>
-        <View>
-          <Image
-            source={require("../placeholderimgs/img2.jpg")}
-            style={styles.bubbleban}
-          />
-        </View>
-        <View>
-          <Image
-            source={require("../placeholderimgs/img3.jpg")}
-            style={styles.bubbleban}
-          />
-        </View>
-        <View>
-          <Image
-            source={require("../placeholderimgs/img4.jpg")}
-            style={styles.bubbleban}
-          />
-        </View>
-        <View>
-          <Image
-            source={require("../placeholderimgs/img5.jpg")}
-            style={styles.bubbleban}
-          />
-        </View>
+        {images.map((image, index) => (
+          <View key={index}>
+            <Image
+              source={{ uri: image.FOTO }} // Asegúrate de usar la URL correcta desde tus datos
+              style={styles.bubbleban}
+            />
+            <Text style={styles.title}>{image.NOMBRE}</Text>
+          </View>
+        ))}
       </ScrollView>
       <ScrollView>
         <View>
@@ -69,14 +69,6 @@ export default function HomeScreen({ navigation }) {
         </View>
         <Text style={styles.titulo}>Servicios más contratados</Text>
         <View style={styles.listado}>
-          <TouchableWithoutFeedback onPress={openModal}>
-            <View style={styles.listaItem}>
-              <Image
-                source={require("../placeholderimgs/img5.jpg")}
-                style={styles.bubbleban}
-              />
-            </View>
-          </TouchableWithoutFeedback>
           <Modal
             style={styles.modal}
             visible={modalVisible}
@@ -125,100 +117,17 @@ export default function HomeScreen({ navigation }) {
               <Text>Cerrar</Text>
             </TouchableWithoutFeedback>
           </Modal>
-          <TouchableWithoutFeedback onPress={openModal}>
-          <View style={styles.listaItem} onPress={openModal}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={openModal}>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          </TouchableWithoutFeedback>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
+          {images.map((imageData, index) => (
+      <TouchableWithoutFeedback key={index} onPress={() => openModal(imageData)}>
+        <View style={styles.listaItem}>
+          <Image
+            source={{ uri: imageData.FOTO }} // Asegúrate de usar la URL de la imagen desde tus datos
+            style={styles.bubbleban}
+          />
+        </View>
+      </TouchableWithoutFeedback>
+    ))}
+        
         </View>
       </ScrollView>
     </ScrollView>
@@ -231,6 +140,10 @@ const styles = StyleSheet.create({
     height: 80,
     marginRight: 10,
     borderRadius: 50,
+  },
+  title: {
+    textAlign: "center",
+    fontSize: 16,
   },
   Precio: {
     fontSize: 18,

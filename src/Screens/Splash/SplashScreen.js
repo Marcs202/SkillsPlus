@@ -1,7 +1,7 @@
 import React, {Component} from "react"
 import {View,StatusBar} from "react-native"
 import * as Animatable from "react-native-animatable"
-import  {imageBrackgroundStyle} from "../styles/General"
+import  {imageBrackgroundStyle} from "../../components/General"
 
 
 export default class SplashScreen extends Component{
@@ -24,7 +24,7 @@ export default class SplashScreen extends Component{
 
 
       }}
-      source={require("../../img/skill_logo")}
+      source={require("../../img/skill_logo.png")}
       />
       </View>
     );
