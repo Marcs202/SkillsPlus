@@ -7,12 +7,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import HomeScreen from './Screens/HomeSC';
 import DetailScreen from './Screens/DetailSC';
 import ProfileScreen from './Screens/ProfileSC';
-import SearchScreen from './Screens/SearchSC';
+import NotificationScreen from './Screens/NotificationSC';
 
 //Nombre de las pantallas
 const homeName= 'Inicio';
 const detailsName = 'Servicios';
-const searchName = 'Búsqueda';
+const notificationName = 'Notificaciones';
 const profileName = 'Perfil';
 
 const Tab = createBottomTabNavigator();
@@ -30,8 +30,8 @@ export function MainContainer(){
                         iconName = focused ? 'list' : 'list-outline'
                     }else if (rn === profileName){
                         iconName = focused ? 'person' : 'person-outline'
-                    }else if (rn === searchName){
-                        iconName = focused ? 'search' : 'search-outline'
+                    }else if (rn === notificationName){
+                        iconName = focused ? 'notifications' : 'notifications-outline'
                     }
                     return <Ionicons name={iconName} size={size} color={color}/>
                 },
@@ -53,7 +53,7 @@ export function MainContainer(){
             >
                 <Tab.Screen name={homeName} component={HomeScreen}></Tab.Screen>
                 <Tab.Screen name={detailsName} component={DetailScreen}></Tab.Screen>
-                <Tab.Screen name={searchName} component={SearchScreen}></Tab.Screen>
+                <Tab.Screen name={notificationName} component={NotificationScreen}></Tab.Screen>
                 <Tab.Screen name={profileName} component={ProfileScreen}></Tab.Screen>
             </Tab.Navigator>
         </NavigationContainer>

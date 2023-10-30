@@ -1,20 +1,66 @@
 import { StatusBar } from "expo-status-bar";
-import React, {useState} from "react";
-import { StyleSheet, Text, View, TouchableOpacity  } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { HStack, Banner, Avatar } from "@react-native-material/core";
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Card, Button } from "react-native-paper";
-import { AntDesign } from '@expo/vector-icons'; 
+import { AntDesign } from '@expo/vector-icons';
 import Modal from 'react-native-modal';
 import CheckBox from 'react-native-checkbox';
 import { MainContainer } from "../MainContainer";
 
+/* import React, { useEffect, useState } from 'react';
+import { View, Text } from 'react-native';
+
+function App() {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    fetch('https://api.ejemplo.com/data')
+      .then((response) => response.json())
+      .then((data) => {
+        setData(data);
+      })
+      .catch((error) => {
+        console.error('Error al obtener datos:', error);
+      });
+  }, []);
+
+  return (
+    <View>
+      {data ? (
+        <Text>{data.message}</Text> // Suponiendo que la API devuelve un objeto con una propiedad "message"
+      ) : (
+        <Text>Cargando...</Text>
+      )}
+    </View>
+  );
+}
+
+export default App; */
+
+
 export default function ProfileScreen({ navigation }) {
+
+  /* API BACK SKILL */
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    fetch('https://api.ejemplo.com/data') //URI DE API
+      .then((response) => response.json())
+      .then((data) => {
+        setData(data);
+      })
+      .catch((error) => {
+        console.error('Error al obtener datos:', error);
+      });
+  }, []);
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
 
+
+  /* MODALS */
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -23,10 +69,10 @@ export default function ProfileScreen({ navigation }) {
     setSelectedOption(option);
     toggleModal();
   };
-  
-  const onSignInPressed = () =>{
+
+  const onSignInPressed = () => {
     MainContainer.navigate('SignIn');
- }
+  }
 
   return (
     <>
@@ -34,16 +80,16 @@ export default function ProfileScreen({ navigation }) {
         style={{
           display: "flex",
           flexDirection: "row",
-          height:50,
-          width:'100%',
+          height: 50,
+          width: '100%',
           backgroundColor: "white",
-       
+
           alignItems: "center",
           justifyContent: "center",
         }}
       >
         <AntDesign
-          style={{ paddingRight: 20, marginLeft:300 }}
+          style={{ paddingRight: 20, marginLeft: 300 }}
           name="swap"
           type="font-awesome"
           color="#6F2C8C"
@@ -58,30 +104,31 @@ export default function ProfileScreen({ navigation }) {
           type="font-awesome"
           color="#6F2C8C"
           size={30}
+          marginRight={20}
           onPress={() => {   // Aqui deberia ir el evento para pasar al LOGIN 
             alert("2222");   // onSignInPressed
-          }}       
+          }}
         />
-      
-      <Modal isVisible={isModalVisible}>
-        <View style={{  backgroundColor:'white', justifyContent: 'center', alignItems: 'center' }}>
-          <Text>Selecciona un rol:</Text>
-          
-          <CheckBox
-            label="Profesional"
-            checked={selectedOption === 'Opción 1'}
-            onChange={() => handleOptionSelect('Opción 1')}
-          />
-          <CheckBox
-            label="Contratista"
-            checked={selectedOption === 'Opción 2'}
-            onChange={() => handleOptionSelect('Opción 2')}
-          />
-          
-    
-          <Button title="Cerrar" onPress={toggleModal} />
-        </View>
-      </Modal>
+
+        <Modal isVisible={isModalVisible}>
+          <View style={{ backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}>
+            <Text>Selecciona un rol:</Text>
+
+            <CheckBox
+              label="Profesional"
+              checked={selectedOption === 'Opción 1'}
+              onChange={() => handleOptionSelect('Opción 1')}
+            />
+            <CheckBox
+              label="Contratista"
+              checked={selectedOption === 'Opción 2'}
+              onChange={() => handleOptionSelect('Opción 2')}
+            />
+
+
+            <Button title="Cerrar" onPress={toggleModal} />
+          </View>
+        </Modal>
       </View>
       <Banner
         illustration={(props) => (
@@ -106,21 +153,22 @@ export default function ProfileScreen({ navigation }) {
         }
       ></Banner>
 
-      {/* <View style={{ alignItems: "center", justifyContent: "center" }}>
-        <Text style={{ fontSize: 20, fontWeight: "bold", color: "blue" }}>
-          Tipo de usuario
-        </Text>
-      </View> */}
-
       <Card>
         <Card.Title title="Decoraciones para bodas" />
         <Card.Content>
-          <Text variant="bodyMedium">
+          <View>
+            {data ? (
+              <Text>{data.message}</Text> // Suponiendo que la API devuelve un objeto con una propiedad "message"
+            ) : (
+              <Text>Cargando...</Text>
+            )}
+          </View>
+          {/* <Text variant="bodyMedium">
             Mi nombre es Jeffrey Reyes, soy una persona que se caracteriza por brindar mis
             servicios en Bodas, en lo que mi servicio se basa es en la organización de la
             decoración, arreglos, mesas.
             !Todo lo que quieres en tú boda con creatividad y esfuerzo se puede lograr¡
-          </Text>
+          </Text> */}
         </Card.Content>
         <Card.Cover source={{ uri: "https://picsum.photos/702" }} />
         <Card.Actions>
