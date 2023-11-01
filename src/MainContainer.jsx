@@ -10,12 +10,14 @@ import HomeScreen from './Screens/HomeSC';
 import DetailScreen from './Screens/DetailSC';
 import ProfileScreen from './Screens/ProfileSC';
 import SearchScreen from './Screens/SearchSC';
-
+import AddServices from './Screens/agregarservicios';
+import Signin from './Screens/Login/signin';
 //Nombre de las pantallas
 const homeName = "Inicio";
 const detailsName = "Servicios";
 const searchName = "Búsqueda";
 const profileName = "Perfil";
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -53,7 +55,7 @@ function BTab(){
             }) }
             
             >
-                <Tab.Screen name={homeName} component={HomeScreen}></Tab.Screen>
+                <Tab.Screen name='homeName' component={HomeScreen}></Tab.Screen>
                 <Tab.Screen name={detailsName} component={DetailScreen}></Tab.Screen>
                 <Tab.Screen name={searchName} component={SearchScreen}></Tab.Screen>
                 <Tab.Screen name={profileName} component={ProfileScreen}></Tab.Screen>
@@ -67,6 +69,8 @@ export function MainContainer(){
             <Stack.Navigator>
                 <Stack.Screen name='Tab' component={BTab} options={{ headerShown: false }}></Stack.Screen>
                 <Stack.Screen name="agregarservicios" component={AddServices}/>
+                <Stack.Screen name='Tab2' component={BTab} options={{ headerShown: false }}></Stack.Screen>
+                <Stack.Screen name="login" component={Signin}/>
             </Stack.Navigator>
         </NavigationContainer>
     )

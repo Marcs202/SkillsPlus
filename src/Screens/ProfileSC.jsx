@@ -11,12 +11,17 @@ import CheckBox from 'react-native-checkbox';
 
 
 export default function ProfileScreen({ updateDetailScreenVisibility}) {
+  const navigation = useNavigation();
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [showDetailScreen, setShowDetailScreen] = useState(true);
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
+  const handleLogin = () => {
+    navigation.navigate('login',{screen: 'login'});
+  };
+
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
     if (option === 'Opción 1') {
@@ -62,9 +67,7 @@ export default function ProfileScreen({ updateDetailScreenVisibility}) {
           type="font-awesome"
           color="#6F2C8C"
           size={30}
-          onPress={() => {   // Aqui deberia ir el evento para pasar al LOGIN 
-            alert("2222");   // onSignInPressed
-          }}       
+          onPress={handleLogin}       
         />
       
       <Modal isVisible={isModalVisible}>

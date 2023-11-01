@@ -1,14 +1,31 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { FlatList  } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
-
+import { useGlobal } from "../asset/valuesglobal";
+import axios from 'axios';
 export default function DetailScreen(){
+  const { userIdProfesional } = useGlobal();
     const navigation = useNavigation();
+    const [servicios, setServicios] = useState([]);
       const handleAgregarServicios = () => {
         navigation.navigate('agregarservicios',{screen: 'agregarservicios'});
       };
+
+      const fetchServicios = async () => {
+        try {
+          const response = await axios.get(`http://140.84.176.85:3000/servicios/?idProfesional=${userIdProfesional}`);
+          setServicios(response.data);
+        } catch (error) {
+          console.error('Error al obtener servicios', error);
+          // Manejar el error de la solicitud GET
+        }
+      };
+
+      useEffect(() => {
+        fetchServicios();
+      }, []);
 
     //Datos quemados para el FlatList
   const iconData = [
@@ -37,10 +54,11 @@ export default function DetailScreen(){
   
   //Consts para filtro
   const [searchText, setSearchText] = useState('');
-  const filteredIcons = iconData.filter((item) =>
-    item.title.toLowerCase().includes(searchText.toLowerCase())
+  const filteredIcons = servicios.filter((item) =>
+    item.Titulo.toLowerCase().includes(searchText.toLowerCase())
   );
 
+  console.log('serviciosssssssss',servicios)
     
     return (
         <View style={styles.container}>
@@ -56,10 +74,10 @@ export default function DetailScreen(){
         <View style={styles.divider} />
         <FlatList
           data={filteredIcons}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.ID_Profesional}
           renderItem={({ item }) => (
             <View style={styles.optionContainer}>
-              <Text style={styles.optionTitle}>{item.title}</Text>
+              <Text style={styles.optionTitle}>{item.Titulo}</Text>
               <View style={styles.iconContainer}>
                 {commonIcons.map((iconItem, index) => (
                   <TouchableOpacity key={index} onPress={item.onPress}>
