@@ -1,17 +1,18 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image } from "react-native";
 import { HStack, Banner, Avatar } from "@react-native-material/core";
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { Card, Button } from "react-native-paper";
 import { AntDesign } from '@expo/vector-icons';
 import Modal from 'react-native-modal';
 import CheckBox from 'react-native-checkbox';
+import axios from 'axios';
+
 import { MainContainer } from "../MainContainer";
 
-export default function ProfileScreen({ navigation }) {
 
-export default function ProfileScreen({ updateDetailScreenVisibility}) {
+export default function ProfileScreen({ isAuthenticated, userType }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
 
@@ -21,34 +22,51 @@ export default function ProfileScreen({ updateDetailScreenVisibility}) {
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
     if (option === 'Opción 1') {
-      updateDetailScreenVisibility(true); 
-     
+      updateDetailScreenVisibility(true);
+
     } else {
       updateDetailScreenVisibility(false);
     }
     toggleModal();
   };
-  
-  const onSignInPressed = () =>{
-    MainContainer.navigate('SignIn');
- }
+
+  //Perfil
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    fetch("http://140.84.176.85:3000/usuarios/usuario?id=21")
+      .then((response) => response.json())
+      .then((data) => setUsers(data))
+      .catch((error) => console.error(error));
+  }, []);
+
+  //Servicios
+  const [services, setService] = useState([]);
+
+  useEffect(() => {
+    fetch("http://140.84.176.85:3000/servicios/?idProfesional=23")
+      .then((response) => response.json())
+      .then((data) => setService(data))
+      .catch((error) => console.error(error));
+  }, []);
+
+
+  const [data, setDataApi] = useState([]); // Aquí almacenaremos los datos de la API
+
+  useEffect(() => {
+    // Realizar la solicitud a la API y almacenar los datos en el estado
+    axios.get("http://140.84.176.85:3000/servicios/?idProfesional=23")
+      .then(response => {
+        setDataApi(response.data); // Almacenar los datos en el estado
+      })
+      .catch(error => {
+        console.error('Error al obtener datos de la API:', error);
+      });
+  }, []);
 
   return (
     <>
-   
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          height: 50,
-          width: '100%',
-          backgroundColor: "white",
-
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-       
+      <View style={styles.perfiltop}>
         <AntDesign
           style={{ paddingRight: 20, marginLeft: 300 }}
           name="swap"
@@ -59,7 +77,6 @@ export default function ProfileScreen({ updateDetailScreenVisibility}) {
             toggleModal()
           }}
         />
-
         <AntDesign
           style={{ paddingRight: 15 }}
           name="team"
@@ -71,7 +88,6 @@ export default function ProfileScreen({ updateDetailScreenVisibility}) {
             alert("2222");   // onSignInPressed
           }}
         />
-
         <Modal isVisible={isModalVisible}>
           <View style={{ backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}>
             <Text>Selecciona un rol:</Text>
@@ -86,62 +102,116 @@ export default function ProfileScreen({ updateDetailScreenVisibility}) {
               checked={selectedOption === 'Opción 2'}
               onChange={() => handleOptionSelect('Opción 2')}
             />
-
-
             <Button title="Cerrar" onPress={toggleModal} />
           </View>
         </Modal>
       </View>
-      <Banner
-        illustration={(props) => (
-          <Avatar
-            size={80}
-            rounded
-            source={{
-              uri: "https://objectstorage.mx-queretaro-1.oraclecloud.com/n/axjm5wci2rqn/b/skillsImages/o/William.jpg",
-            }}
-          />
-        )}
-        text={
-          <Text
-            style={{
-              fontSize: 24,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            Jeffrey Reyes
-          </Text>
-        }
-      ></Banner>
 
-      <Card>
-        <Card.Title title="Decoraciones para bodas" />
-        <Card.Content>
-          <View>
-            {data ? (
-              <Text>{data.message}</Text> // Suponiendo que la API devuelve un objeto con una propiedad "message"
-            ) : (
-              <Text>Cargando...</Text>
-            )}
+      <ScrollView >
+        <View key={users.Id} style={styles.userContainer}>
+          <Image source={{ uri: users.Foto }} style={styles.perfil} />
+          <View style={styles.userInfo}>
+            <Text style={styles.name}>{users.Nombre} {users.Apellido}</Text>
+            <Text style={styles.email}>{users.Correo}</Text>
           </View>
-          {/* <Text variant="bodyMedium">
-            Mi nombre es Jeffrey Reyes, soy una persona que se caracteriza por brindar mis
-            servicios en Bodas, en lo que mi servicio se basa es en la organización de la
-            decoración, arreglos, mesas.
-            !Todo lo que quieres en tú boda con creatividad y esfuerzo se puede lograr¡
-          </Text> */}
-        </Card.Content>
-        <Card.Cover source={{ uri: "https://picsum.photos/702" }} />
-        <Card.Actions>
-          <Button>Ver</Button>
-        </Card.Actions>
-      </Card>
-      
-       
+        </View>
 
-       
-    
+
+        <ScrollView>
+          <View style={styles.containerIn}>
+            {data.map(item => (
+              <View key={item.ID_Servicio} style={styles.serviceBox}>
+                <Text style={styles.title}>{item.Titulo}</Text>
+                <View style={{ width: '70%', flexDirection: "row" }}>
+                  <Text style={styles.descriptionIn}>{item.Descripcion}</Text>
+                  <Image source={{ uri: item.Foto }} style={styles.serviceImg} />
+                </View>
+                <Button mode="contained" style={styles.serviceBtn} 
+                  onPress={() => {
+                    // Manejar la acción del botón
+                  }}
+                >
+                  Contratacion
+                </Button>
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+
+      </ScrollView>
+
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  perfiltop: {
+    display: "flex",
+    flexDirection: "row"    
+  },
+  userContainer: {
+    flexDirection: 'row',
+    flex: 2,
+    marginLeft: 10
+  },
+  userInfo: {
+    flex: 1,
+    marginLeft: 10,
+  },
+  perfil: {
+    width: 80,
+    height: 80,
+    marginLeft: 15,
+    borderRadius: 50
+  },
+  name: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: '#6F2C8C'
+  },
+  email: {
+    fontSize: 16
+  },
+  containerIn: {
+    marginLeft: 15,
+    marginRight: 15
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#6F2C8C',
+    padding: 5,
+    marginLeft: 100
+  },
+  descriptionIn: {
+    color: '#4A376A',
+    fontWeight: '500',
+    fontSize: 16,
+    padding: 15,
+    alignContent: 'center',
+    textAlign: 'justify'
+  },
+  serviceImg: {
+    width: 110,
+    height: 130,
+    borderRadius: 10,
+    marginTop: '10%'
+  },
+  serviceBox: {
+    borderWidth: 2,
+    borderColor: '#AA92CE', /* #722FE3 */
+    borderStyle: 'dotted',
+    borderRadius: 10, /* #D4E6F1 */
+    marginTop: 25,
+    paddingBottom: 15,
+    backgroundColor: '#F5EDF9' 
+  },
+  serviceBtn: {
+    borderWidth: 2,    
+    borderColor: '#F5EDF9',
+    borderRadius: 25,
+    width: 140,
+    marginLeft: 45,
+    backgroundColor: '#722FE3'    
+  }
+});
