@@ -21,6 +21,35 @@ import CustomDropdown from "../components/customdropdown";
 export default function HomeScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
 
+  const handleDropdownChange = (value) => {
+   
+    const apiUrl = `http://140.84.176.85:3000/profesionales/proByCategory?categoria=${value}`;
+    if(value != null) {
+    fetch(apiUrl)
+      .then((response) => response.json())
+      .then((data) => {
+        // Manejar los datos de la API, por ejemplo, establecerlos en un estado
+        console.log(`Datos de la API: ${value}`, data);
+        setImages2(data)
+
+      })
+      .catch((error) => {
+        // Manejar errores de la petición
+        console.error("Error en la petición a la API:", error);
+      });
+    } else {
+      useEffect(() => {
+        fetch("http://140.84.176.85:3000/profesionales/")
+          .then((response) => response.json())
+          .then((data) => {
+            setImages2(data);
+            console.log(data);
+          })
+          .catch((error) => console.error(error));
+      }, []);
+    }
+  };
+
   const openModal = () => {
     setModalVisible(true);
   };
@@ -30,6 +59,7 @@ export default function HomeScreen({ navigation }) {
   };
 
   const [images, setImages] = useState([]);
+  const [images2, setImages2] = useState([]);
 
   useEffect(() => {
     fetch("http://140.84.176.85:3000/categorias/")
@@ -41,14 +71,14 @@ export default function HomeScreen({ navigation }) {
   //para los perfiles
 
   useEffect(() => {
-    fetch("http://140.84.176.85:3000/categorias/")
+    fetch("http://140.84.176.85:3000/profesionales/")
       .then((response) => response.json())
       .then((data) => {
-        setImages(data); 
+        setImages2(data);
+        console.log(data);
       })
       .catch((error) => console.error(error));
   }, []);
-  
 
   return (
     <ScrollView style={styles.contenedor}>
@@ -65,69 +95,26 @@ export default function HomeScreen({ navigation }) {
       </ScrollView>
       <ScrollView>
         <View>
-          <CustomDropdown style={styles.dropdown}></CustomDropdown>
+          <CustomDropdown
+            onValueChange={handleDropdownChange}
+            style={styles.dropdown}
+          ></CustomDropdown>
         </View>
-        <Text style={styles.titulo}>Servicios más contratados</Text>
+        <Text style={styles.titulo}>Perfiles más contratados</Text>
         <View style={styles.listado}>
-          <Modal
-            style={styles.modal}
-            visible={modalVisible}
-            animationType="slide"
-            transparent={true}
-            onRequestClose={closeModal}
-          >
-            <View style={styles.modalContainer}>
-              <View style={styles.modalHeader}>
-                {/* Contenido del encabezado */}
-                <Image
-                  source={require("../placeholderimgs/img5.jpg")}
-                  style={styles.modalImage}
-                />
-                <Text style={styles.headerText}>Título del Encabezado</Text>
-              </View>
-              <View style={styles.modalContent}>
-                {/* Contenido del modal */}
-                <Text style={styles.textModal}>
-                  Descripción de la imagen o cualquier otro contenido aquí.
-                </Text>
-                <Text style={styles.Precio}>Precio: $50</Text>
-                {/* Botones */}
-                <View style={styles.buttonContainer}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      alert("se envio solicitud de contratacion");
-                    }}
-                  >
-                    <Text style={styles.button}>Solicitar contratacion</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      /* Manejar acción del primer botón */
-                    }}
-                  >
-                    <Text style={styles.button}>Ver perfil</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
+          {images2.map((imageData, index) => (
             <TouchableWithoutFeedback
-              style={styles.buttonContainer}
-              onPress={closeModal}
+              key={index}
+              onPress={() => openModal(imageData)}
             >
-              <Text>Cerrar</Text>
+              <View style={styles.listaItem}>
+                <Image
+                  source={{ uri: imageData.Fotografia }} // Asegúrate de usar la URL de la imagen desde tus datos
+                  style={styles.bubbleban}
+                />
+              </View>
             </TouchableWithoutFeedback>
-          </Modal>
-          {images.map((imageData, index) => (
-      <TouchableWithoutFeedback key={index} onPress={() => openModal(imageData)}>
-        <View style={styles.listaItem}>
-          <Image
-            source={{ uri: imageData.FOTO }} // Asegúrate de usar la URL de la imagen desde tus datos
-            style={styles.bubbleban}
-          />
-        </View>
-      </TouchableWithoutFeedback>
-    ))}
-        
+          ))}
         </View>
       </ScrollView>
     </ScrollView>

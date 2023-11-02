@@ -13,12 +13,17 @@ import { MainContainer } from "../MainContainer";
 
 
 export default function ProfileScreen({ isAuthenticated, userType }) {
+  const navigation = useNavigation();
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
+  const handleLogin = () => {
+    navigation.navigate('login',{screen: 'login'});
+  };
+
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
     if (option === 'Opción 1') {
@@ -83,10 +88,8 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
           type="font-awesome"
           color="#6F2C8C"
           size={30}
-          marginRight={20}
-          onPress={() => {   // Aqui deberia ir el evento para pasar al LOGIN 
-            alert("2222");   // onSignInPressed
-          }}
+          marginRight={20}          
+          onPress={handleLogin}       
         />
         <Modal isVisible={isModalVisible}>
           <View style={{ backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}>
