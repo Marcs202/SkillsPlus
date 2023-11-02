@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "SkillPlus",
+    "slug": "SkillPlus",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "SkillPlus"
+}
