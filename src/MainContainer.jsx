@@ -12,6 +12,7 @@ import ProfileScreen from './Screens/ProfileSC';
 import SearchScreen from './Screens/SearchSC';
 import AddServices from './Screens/agregarservicios';
 import Signin from './Screens/Login/signin';
+import SignUp from './Screens/Login/signup';
 //Nombre de las pantallas
 const homeName = "Inicio";
 const detailsName = "Servicios";
@@ -71,6 +72,8 @@ export function MainContainer(){
                 <Stack.Screen name="agregarservicios" component={AddServices}/>
                 <Stack.Screen name='Tab2' component={BTab} options={{ headerShown: false }}></Stack.Screen>
                 <Stack.Screen name="login" component={Signin}/>
+                <Stack.Screen name='Tab23' component={BTab} options={{ headerShown: false }}></Stack.Screen>
+                <Stack.Screen name="registrarse" component={SignUp}/>
             </Stack.Navigator>
         </NavigationContainer>
     )

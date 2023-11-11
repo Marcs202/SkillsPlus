@@ -24,27 +24,11 @@ export default function DetailScreen(){
       };
 
       useEffect(() => {
-        fetchServicios();
-      }, []);
+          fetchServicios();
+      },[userIdProfesional]);
+    
 
-    //Datos quemados para el FlatList
-  const iconData = [
-    {
-        id: '1',
-        title: 'Servicio 1',
-        onPress: () => alert('Iconos de Opción 1 presionados'),
-      },
-      {
-        id: '2',
-        title: 'Servicio 2',
-        onPress: () => alert('Iconos de Opción 2 presionados'),
-      },
-      {
-        id: '3',
-        title: 'Servicio 3',
-        onPress: () => alert('Iconos de Opción 3 presionados'),
-      },
-  ];
+
 
   const commonIcons = [
     { name: 'pencil', text: 'Editar', color:'#474747' },
@@ -58,7 +42,7 @@ export default function DetailScreen(){
     item.Titulo.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  console.log('serviciosssssssss',servicios)
+  console.log('servic',servicios)
     
     return (
         <View style={styles.container}>
