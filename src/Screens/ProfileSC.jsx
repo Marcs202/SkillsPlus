@@ -115,8 +115,9 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
 
           <Text> ¿ Deseas convertirte en profesional ?</Text>
           <Card.Actions>
-         < Button onPress={handlOption,updateDetailScreenVisibility(true);}  > Si </Button> 
-         < Button onPress={toggleModal, updateDetailScreenVisibility(false);}> No </Button>
+          <Button onPress={() => { handlOption(); updateDetailScreenVisibility(true); }}>Si</Button>
+          <Button onPress={() => { toggleModal(); updateDetailScreenVisibility(false); }}>No</Button>
+
         </Card.Actions> 
         </View>
       </Modal>
