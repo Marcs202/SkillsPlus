@@ -8,15 +8,16 @@ import Modal from 'react-native-modal';
 import CheckBox from 'react-native-checkbox';
 import axios from 'axios';
 import { useGlobal } from "../asset/valuesglobal";
+import { useRoute } from '@react-navigation/native';
 
 
-
-export default function ProfileScreen({ isAuthenticated, userType }) {
+export default function newProfileScreen({ isAuthenticated, userType }) {
   const navigation = useNavigation();
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   
-
+  const route = useRoute();
+  const { profesionalId, idUsuario } = route.params;
 
 
   const toggleModal = () => {
@@ -50,18 +51,18 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
   };
 
   const { userIdProfesional } = useGlobal();
-  const { userId } = useGlobal();
+  //const { userId } = useGlobal();
 
   //Perfil
   const [users, setUsers] = useState([]);
 
   useFocusEffect(
     React.useCallback(() => {
-      fetch(`http://140.84.176.85:3000/usuarios/usuario?id=${userId}`)
+      fetch(`http://140.84.176.85:3000/usuarios/usuario?id=${idUsuario}`)
         .then((response) => response.json())
         .then((data) => setUsers(data))
         .catch((error) => console.error(error));
-    }, [userId])
+    }, [idUsuario])
   );
 
   //Servicios
@@ -70,7 +71,7 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
   useFocusEffect(
     React.useCallback(() => {
       axios
-        .get(`http://140.84.176.85:3000/servicios/?idProfesional=${userIdProfesional}`)
+        .get(`http://140.84.176.85:3000/servicios/?idProfesional=${profesionalId}`)
         .then(response => {
           if (response.data && typeof response.data === 'object') {
             setDataApi(response.data); // Analizar solo si es un objeto válido
@@ -81,12 +82,12 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
         .catch(error => {
           console.error('Error al obtener datos de la API:', error);
         });
-    }, [userIdProfesional, userId])
+    }, [])
   );
 
   return (
     <>
-      <View style={styles.perfiltop}>
+      {/* <View style={styles.perfiltop}>
         <AntDesign
           style={{ paddingRight: 20, marginLeft: 250 }}
           name="deleteuser"
@@ -116,7 +117,7 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
 
         <Modal isVisible={isModalVisible}>
           <View style={{ backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Selecciona un rol:</Text>
+            <Text>Selecciona un rol 33333333:</Text>
 
             <CheckBox
               label="Profesional"
@@ -131,7 +132,7 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
             <Button title="Cerrar" onPress={toggleModal} />
           </View>
         </Modal>
-      </View>
+      </View> */}
 
       <ScrollView >
         <View style={styles.userContainer}>

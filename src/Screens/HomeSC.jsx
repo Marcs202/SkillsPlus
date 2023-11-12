@@ -92,13 +92,11 @@ export default function HomeScreen({ navigation }) {
     }
   }, [categoryValue, departmentValue]);
 
-  const openModal = () => {
-    setModalVisible(true);
+  const handlePerfil = (profesionalId, idUsuario) => {
+    navigation.navigate('perfil', { profesionalId, idUsuario });
   };
 
-  const closeModal = () => {
-    setModalVisible(false);
-  };
+ 
 
   const [images, setImages] = useState([]);
   const [images2, setImages2] = useState([]);
@@ -117,7 +115,7 @@ export default function HomeScreen({ navigation }) {
       .then((response) => response.json())
       .then((data) => {
         setImages2(data);
-        console.log(data);
+        console.log('DATa de los perfiles',data);
       })
       .catch((error) => console.error(error));
   }, []);
@@ -147,8 +145,9 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.listado}>
           {images2.map((imageData, index) => (
             <TouchableWithoutFeedback
+          
               key={index}
-              onPress={() => openModal(imageData)}
+              onPress={() => handlePerfil(imageData.ID_Profesional, imageData.ID_Usuario)}
             >
               <View style={styles.listaItem}>
                 <Image
