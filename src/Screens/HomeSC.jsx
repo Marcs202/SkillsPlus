@@ -20,23 +20,44 @@ import CustomDropdown from "../components/customdropdown";
 
 export default function HomeScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
-
+  const [categoryValue, setCategoryValue] = useState(null);
+  const [departmentValue, setDepartmentValue] = useState(null);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
   const handleDropdownChange = (value) => {
-   
+    console.log("categoria", value);
+    setCategoryValue(value);
     const apiUrl = `http://140.84.176.85:3000/profesionales/proByCategory?categoria=${value}`;
-    if(value != null) {
-    fetch(apiUrl)
-      .then((response) => response.json())
-      .then((data) => {
-        // Manejar los datos de la API, por ejemplo, establecerlos en un estado
-        console.log(`Datos de la API: ${value}`, data);
-        setImages2(data)
+    if (value != undefined) {
+      fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(`Datos de la API: ${value}`, data);
+          setImages2(data);
+        })
+        .catch((error) => {
+          // Manejar errores de la petición
+          console.error("Error en la petición a la API:", error);
+        });
+    }
+  };
 
-      })
-      .catch((error) => {
-        // Manejar errores de la petición
-        console.error("Error en la petición a la API:", error);
-      });
+  const handleDropdownChangedep = (valuedep) => {
+    setDepartmentValue(valuedep);
+    console.log("departamento", valuedep);
+    const apiDep = `http://140.84.176.85:3000/profesionales/proByDepart?departamento=${valuedep}`;
+    console.log("departamento", valuedep);
+    if (valuedep != null) {
+      fetch(apiDep)
+        .then((response) => response.json())
+        .then((data) => {
+          // Manejar los datos de la API, por ejemplo, establecerlos en un estado
+          console.log(`Datos de la API: ${valuedep}`, data);
+          setImages2(data);
+        })
+        .catch((error) => {
+          // Manejar errores de la petición
+          console.error("Error en la petición a la API:", error);
+        });
     } else {
       useEffect(() => {
         fetch("http://140.84.176.85:3000/profesionales/")
@@ -50,13 +71,32 @@ export default function HomeScreen({ navigation }) {
     }
   };
 
-  const openModal = () => {
-    setModalVisible(true);
+  useEffect(() => {
+    if (categoryValue != null && departmentValue != null) {
+      console.log('1',categoryValue)
+      console.log('2',departmentValue)
+      const apiCombined = `http://140.84.176.85:3000/profesionales/proByCategoryDepartament?categoria=${categoryValue}&departamento=${departmentValue}`;
+      fetch(apiCombined)
+        .then((response) => response.json())
+        .then((data) => {
+          // Manejar los datos de la API, por ejemplo, establecerlos en un estado
+         // console.log(`Datos de la API: ${valuedep}`, data);
+          setImages2(data);
+        })
+        .catch((error) => {
+          // Manejar errores de la petición
+          console.error("Error en la petición a la API:", error);
+        });
+
+      setIsDataLoaded(true);
+    }
+  }, [categoryValue, departmentValue]);
+
+  const handlePerfil = (profesionalId, idUsuario) => {
+    navigation.navigate('perfil', { profesionalId, idUsuario });
   };
 
-  const closeModal = () => {
-    setModalVisible(false);
-  };
+ 
 
   const [images, setImages] = useState([]);
   const [images2, setImages2] = useState([]);
@@ -75,7 +115,7 @@ export default function HomeScreen({ navigation }) {
       .then((response) => response.json())
       .then((data) => {
         setImages2(data);
-        console.log(data);
+        console.log('DATa de los perfiles',data);
       })
       .catch((error) => console.error(error));
   }, []);
@@ -97,6 +137,7 @@ export default function HomeScreen({ navigation }) {
         <View>
           <CustomDropdown
             onValueChange={handleDropdownChange}
+            onValueChangeDep={handleDropdownChangedep}
             style={styles.dropdown}
           ></CustomDropdown>
         </View>
@@ -104,8 +145,9 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.listado}>
           {images2.map((imageData, index) => (
             <TouchableWithoutFeedback
+          
               key={index}
-              onPress={() => openModal(imageData)}
+              onPress={() => handlePerfil(imageData.ID_Profesional, imageData.ID_Usuario)}
             >
               <View style={styles.listaItem}>
                 <Image

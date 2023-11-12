@@ -5,17 +5,19 @@ import { NavigationContainer, useNavigation, useFocusEffect } from '@react-navig
 import { Card, Button } from "react-native-paper";
 import { AntDesign } from '@expo/vector-icons';
 import Modal from 'react-native-modal';
+import CheckBox from 'react-native-checkbox';
 import axios from 'axios';
 import { useGlobal } from "../asset/valuesglobal";
+import { useRoute } from '@react-navigation/native';
 
 
-
-export default function ProfileScreen({ isAuthenticated, userType }) {
+export default function newProfileScreen({ isAuthenticated, userType }) {
   const navigation = useNavigation();
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   
-
+  const route = useRoute();
+  const { profesionalId, idUsuario } = route.params;
 
 
   const toggleModal = () => {
@@ -23,12 +25,6 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
   };
   const handleLogin = () => {
     navigation.navigate('login', { screen: 'login' });
-  };
-
-  const handlOption = () => {
-    alert("Tendras que volverte a logear para relizar el cambio" );
-    handleLogin();
-
   };
 
   const handleLogout = () => {
@@ -43,20 +39,30 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
       }
     };      
 
+  const handleOptionSelect = (option) => {
+    setSelectedOption(option);
+    if (option === 'Opción 1') {
+      updateDetailScreenVisibility(true);
+      
+    } else {
+      updateDetailScreenVisibility(false);
+    }
+    toggleModal();
+  };
 
   const { userIdProfesional } = useGlobal();
-  const { userId } = useGlobal();
+  //const { userId } = useGlobal();
 
   //Perfil
   const [users, setUsers] = useState([]);
 
   useFocusEffect(
     React.useCallback(() => {
-      fetch(`http://140.84.176.85:3000/usuarios/usuario?id=${userId}`)
+      fetch(`http://140.84.176.85:3000/usuarios/usuario?id=${idUsuario}`)
         .then((response) => response.json())
         .then((data) => setUsers(data))
         .catch((error) => console.error(error));
-    }, [userId])
+    }, [idUsuario])
   );
 
   //Servicios
@@ -65,7 +71,7 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
   useFocusEffect(
     React.useCallback(() => {
       axios
-        .get(`http://140.84.176.85:3000/servicios/?idProfesional=${userIdProfesional}`)
+        .get(`http://140.84.176.85:3000/servicios/?idProfesional=${profesionalId}`)
         .then(response => {
           if (response.data && typeof response.data === 'object') {
             setDataApi(response.data); // Analizar solo si es un objeto válido
@@ -76,12 +82,12 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
         .catch(error => {
           console.error('Error al obtener datos de la API:', error);
         });
-    }, [userIdProfesional, userId])
+    }, [])
   );
 
   return (
     <>
-      <View style={styles.perfiltop}>
+      {/* <View style={styles.perfiltop}>
         <AntDesign
           style={{ paddingRight: 20, marginLeft: 250 }}
           name="deleteuser"
@@ -109,18 +115,24 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
           onPress={handleLogin}
         />
 
-    <Modal  isVisible={isModalVisible}>
-        <View style={{  backgroundColor:'white', justifyContent: 'center', alignItems: 'center',  borderRadius: 10, padding: 20}}>
-        
+        <Modal isVisible={isModalVisible}>
+          <View style={{ backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}>
+            <Text>Selecciona un rol 33333333:</Text>
 
-          <Text> ¿ Deseas convertirte en profesional ?</Text>
-          <Card.Actions>
-         < Button onPress={handlOption,updateDetailScreenVisibility(true);}  > Si </Button> 
-         < Button onPress={toggleModal, updateDetailScreenVisibility(false);}> No </Button>
-        </Card.Actions> 
-        </View>
-      </Modal>
-      </View>
+            <CheckBox
+              label="Profesional"
+              checked={selectedOption === 'Opción 1'}
+              onChange={() => handleOptionSelect('Opción 1')}
+            />
+            <CheckBox
+              label="Contratista"
+              checked={selectedOption === 'Opción 2'}
+              onChange={() => handleOptionSelect('Opción 2')}
+            />
+            <Button title="Cerrar" onPress={toggleModal} />
+          </View>
+        </Modal>
+      </View> */}
 
       <ScrollView >
         <View style={styles.userContainer}>

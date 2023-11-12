@@ -2,8 +2,12 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import axios from 'axios';
+import { useGlobal } from "../asset/valuesglobal";
 
+import { useNavigation } from "@react-navigation/native";
 export default function AddServices() {
+  const navigation = useNavigation();
+  const { userIdProfesional } = useGlobal();
     const [Titulo, setTitulo] = useState('');
     const [Desc, setDesc] = useState('');
     const [selectedImage, setSelectedImage] = useState(''); // Estado para almacenar la imagen seleccionada
@@ -28,7 +32,7 @@ export default function AddServices() {
      // data.append('name', 'Nombre de ejemplo'); 
       data.append('titulo', Titulo);
       data.append('descripcion', Desc);
-      data.append('profesionalId', 2); 
+      data.append('profesionalId', userIdProfesional); 
       data.append('image', {
         uri: selectedImage,
         type: 'image/jpeg', 
@@ -52,6 +56,8 @@ export default function AddServices() {
         console.error('Error al guardar el servicio', error);
         alert('Error al guardar el servicio');
       }
+      
+      navigation.navigate("homeName");
     }
 
 
