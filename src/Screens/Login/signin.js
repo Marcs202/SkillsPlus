@@ -18,6 +18,7 @@ const Signin = () => {
   const { userId } = useGlobal();
   const { setUserIdProfesional } = useGlobal();
   const { userIdProfesional } = useGlobal();
+
   const onSignInPressed = () => {
     const userData = {
       correo: usernamel,
@@ -32,7 +33,7 @@ const Signin = () => {
       })
       .then((response) => {
         // console.log('respuesta',response)
-        console.log("respuesta", response.data.idUsuario);
+        console.log("respuesta", response);
         if (response.status === 201) {
           console.info("Inicio de sesión exitoso");
           setUserId(response.data.idUsuario);
@@ -53,6 +54,10 @@ const Signin = () => {
   const onSignUpPressed = () => {
     navigation.navigate("SignUp");
   };
+
+  const onRegister = () => {
+    navigation.navigate('registrarse',{screen: 'registrarse'});
+  }
 
   return (
     <ScrollView>
@@ -77,7 +82,7 @@ const Signin = () => {
         </TouchableHighlight>
         <Custombutton
           text="¿No tienes cuenta? Crea una."
-          onPress={onSignUpPressed}
+          onPress={onRegister}
           type="TERTIARY"
         />
       </View>

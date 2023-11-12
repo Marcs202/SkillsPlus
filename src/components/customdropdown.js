@@ -2,11 +2,11 @@ import { SelectList } from "react-native-dropdown-select-list";
 import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet } from "react-native";
 
-const CustomDropdown = ({ onValueChange }) => {
-  const [selected, setSelected] = useState("");
+const CustomDropdown = ({ onValueChange, onValueChangeDep }) => {
+  const [selected, setSelected] = useState([]);
   const [apiData, setApiData] = useState([]); // Estado para almacenar los datos de la API
 
-  // Simula una solicitud a la API, reemplaza esto con tu lógica real de solicitud a la API.
+
   useEffect(() => {
     fetch("http://140.84.176.85:3000/categorias/")
       .then((response) => response.json())
@@ -15,7 +15,7 @@ const CustomDropdown = ({ onValueChange }) => {
   }, []);
 
   useEffect(() => {
-    fetch("http://140.84.176.85:3000/categorias/")
+    fetch("http://140.84.176.85:3000/departamentos/")
       .then((response) => response.json())
       .then((data) => setSelected(data))
       .catch((error) => console.error(error));
@@ -23,13 +23,22 @@ const CustomDropdown = ({ onValueChange }) => {
 
 
 
-  const selectData = apiData.map((item) => ({ key: item.ID, value: item.NOMBRE }));
-  //const selectData2 = selected.map((item) => ({ key: item.ID, value: item.NOMBRE }));
+  const selectData = Array.isArray(apiData) ? apiData.map((item) => ({ key: item.ID, value: item.NOMBRE })) : [];
+  const selectData2 = Array.isArray(selected) ? selected.map((item) => ({ key: item.ID, value: item.NOMBRE })) : [];
+  
+  // console.log('Pruebas',selectData2)
+  // console.log('Pruebas',selectData)
 
   const handleValueChange = (value) => {
-    setSelected(value);
+    setApiData(value);
     if (onValueChange) {
       onValueChange(value); // Llama a la función de devolución de llamada con el valor seleccionado
+    }
+  };
+  const handleValueChangeDep = (value) => {
+    setSelected(value);
+    if (onValueChangeDep) {
+      onValueChangeDep(value); // Llama a la función de devolución de llamada con el valor seleccionado
     }
   };
 
@@ -44,8 +53,8 @@ const CustomDropdown = ({ onValueChange }) => {
         dropdownStyles={{ backgroundColor: "white",  }}
       />
       <SelectList
-        setSelected={(val) => setSelected(val)}
-        data={selectData}
+        setSelected={handleValueChangeDep}
+        data={selectData2}
         save="value"
         boxStyles={{  backgroundColor: "white",  width: '50%', justifyContent:'space-between'  }}
         dropdownStyles={{ backgroundColor: "white"  }}
