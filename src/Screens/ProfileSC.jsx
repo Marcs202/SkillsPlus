@@ -210,7 +210,7 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
                     });
                   }}
                 >
-                  Contratacion
+                  Contrataciones
                 </Button>
               </View>
             ))}
@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#F5EDF9",
     borderRadius: 25,
-    width: 140,
+    width: 190,
     marginLeft: 45,
     backgroundColor: "#722FE3",
   },

@@ -14,8 +14,8 @@ import NotificationScreen from "./Screens/NotificationSC";
 import AddServices from "./Screens/agregarservicios";
 import EditServices from "./Screens/editarServicio";
 import Signin from "./Screens/Login/signin";
-import SignUp from './Screens/Login/signup';
-import newProfileScreen from './Screens/newPerfil';
+import SignUp from "./Screens/Login/signup";
+import newProfileScreen from "./Screens/newPerfil";
 //Nombre de las pantallas
 const homeName = "Inicio";
 const detailsName = "Servicios";
@@ -70,20 +70,31 @@ function BTab() {
   );
 }
 
-export function MainContainer(){
-    return(
-        <NavigationContainer>
-            <Stack.Navigator>
-                <Stack.Screen name='Tab' component={BTab} options={{ headerShown: false }}></Stack.Screen>
-                <Stack.Screen name="agregarservicios" component={AddServices}/>
-                <Stack.Screen name="editarservicios" component={EditServices}/>
-                <Stack.Screen name='Tab2' component={BTab} options={{ headerShown: false }}></Stack.Screen>
-                <Stack.Screen name="login" component={Signin}/>
-                <Stack.Screen name='Tab23' component={BTab} options={{ headerShown: false }}></Stack.Screen>
-                <Stack.Screen name="registrarse" component={SignUp}/>
-                <Stack.Screen name="perfil" component={newProfileScreen}/>
-
-            </Stack.Navigator>
-        </NavigationContainer>
-    )
+export function MainContainer() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Tab"
+          component={BTab}
+          options={{ headerShown: false }}
+        ></Stack.Screen>
+        <Stack.Screen name="agregarservicios" component={AddServices} />
+        <Stack.Screen name="editarservicios" component={EditServices} />
+        <Stack.Screen
+          name="Tab2"
+          component={BTab}
+          options={{ headerShown: false }}
+        ></Stack.Screen>
+        <Stack.Screen name="login" component={Signin} />
+        <Stack.Screen
+          name="Tab23"
+          component={BTab}
+          options={{ headerShown: false }}
+        ></Stack.Screen>
+        <Stack.Screen name="registrarse" component={SignUp} />
+        <Stack.Screen name="perfil" component={newProfileScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 }

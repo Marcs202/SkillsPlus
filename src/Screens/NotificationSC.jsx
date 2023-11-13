@@ -10,7 +10,7 @@ import {
   ScrollView,
   Image,
 } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { useGlobal } from "../asset/valuesglobal";
 
@@ -19,7 +19,7 @@ export default function NotificationScreen({ navigation }) {
   const { userId } = useGlobal();
 
   // CONSUMO DE VISTA DE PROFESIONALES/ACEPTADOS
-  const [data, setData] = useState([]);
+  const [profesional, setProfesional] = useState([]);
   useFocusEffect(
     React.useCallback(() => {
       axios
@@ -28,7 +28,7 @@ export default function NotificationScreen({ navigation }) {
         )
         .then((response) => {
           if (response.data && typeof response.data === "object") {
-            setData(response.data); // Analizar solo si es un objeto válido
+            setProfesional(response.data); // Analizar solo si es un objeto válido
           } else {
             console.error("Respuesta de la API no es un JSON válido.");
           }
@@ -123,6 +123,75 @@ export default function NotificationScreen({ navigation }) {
     }, [userId])
   );
 
+  const acceptService = async (ContratacionID) => {
+    try {
+      const data = {
+        idContratacion: ContratacionID,
+      };
+
+      const response = await axios.put(
+        "http://140.84.176.85:3000/contrataciones/aceptar",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      alert("Servicio aceptado");
+    } catch (error) {
+      console.error("Error al aceptar el servicio", error);
+      alert("Error al aceptar el servicio");
+    }
+  };
+
+  const declineService = async (ContratacionID) => {
+    try {
+      const data = {
+        idContratacion: ContratacionID,
+      };
+
+      const response = await axios.put(
+        "http://140.84.176.85:3000/contrataciones/rechazar",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      alert("Servicio rechazado");
+    } catch (error) {
+      console.error("Error al rechazar el servicio", error);
+      alert("Error al rechazar el servicio");
+    }
+  };
+
+  const finishService = async (ContratacionID) => {
+    try {
+      const data = {
+        idContratacion: ContratacionID,
+      };
+
+      const response = await axios.put(
+        "http://140.84.176.85:3000/contrataciones/finalizar",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      alert("Servicio finalizado");
+    } catch (error) {
+      console.error("Error al finalizar el servicio", error);
+      alert("Error al finalizar el servicio");
+    }
+  };
+
   return (
     <>
       <ScrollView>
@@ -152,17 +221,23 @@ export default function NotificationScreen({ navigation }) {
                 <Text style={[styles.text, styles.cardTitle]}>
                   {item.Servicio_contratado}
                 </Text>
-                <TouchableOpacity style={[styles.button]}>
+                <TouchableOpacity
+                  style={[styles.button]}
+                  onPress={() => acceptService(item.ContratacionID)}
+                >
                   <Text style={styles.buttonText}>Aceptar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button]}>
+                <TouchableOpacity
+                  style={[styles.button]}
+                  onPress={() => declineService(item.ContratacionID)}
+                >
                   <Text style={styles.buttonText}>Rechazar</Text>
                 </TouchableOpacity>
               </View>
             </View>
           ))}
 
-          {data.map((item) => (
+          {profesional.map((item) => (
             <View
               key={item.ContratacionID}
               style={[styles.card, styles.backgroundAccept]}
@@ -186,7 +261,10 @@ export default function NotificationScreen({ navigation }) {
                 <Text style={[styles.text, styles.cardTitle]}>
                   {item.Servicio_contratado}
                 </Text>
-                <TouchableOpacity style={[styles.button]}>
+                <TouchableOpacity
+                  style={[styles.button]}
+                  onPress={() => finishService(item.ContratacionID)}
+                >
                   <Text style={styles.buttonText}>Finalizar</Text>
                 </TouchableOpacity>
               </View>
