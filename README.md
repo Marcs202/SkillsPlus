@@ -20,7 +20,7 @@ sitio web.
 
 * Jeffrey Xavier Portillo Saravia - Mixjeff			
 
-* Marcos de Jesús Hernández Sorto - Marcs20
+* Marcos de Jesús Hernández Sorto - Marcs202
 
 * William Ernesto Rodríguez Reyes - williamre574					
 
