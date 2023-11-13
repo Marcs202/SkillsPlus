@@ -58,8 +58,6 @@ No Comercial: Usted no puede hacer uso del material con propósitos comerciales.
 * [Tablero en Trello] - https://trello.com/b/2sEaj5wX/skills
 
 * [Enlace a Diseños en Mockups] - https://www.figma.com/file/TZP0oTCjTFkraE9KdX1DOC/skill-%2B?type=design&node-id=0%3A1&mode=design&t=GUcMeAnq3gxkXM9m-1
-
-* [Enlace a Documento PDF con explicación del sistema] -
   
 * Manual de usuario (ultima version 0200) y Manual tecnico(ultimna version 2000)  - https://drive.google.com/drive/folders/1KTfvLMTHYwTeSRWfMqMcAtCfHzvaKgV2?usp=sharing
 
