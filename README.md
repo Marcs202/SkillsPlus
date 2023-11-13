@@ -61,6 +61,6 @@ No Comercial: Usted no puede hacer uso del material con propósitos comerciales.
 
 * [Enlace a Documento PDF con explicación del sistema] -
   
-* Manual de usuario (ultima version 0120) y Manual tecnico(ultimna version 1020)  - https://drive.google.com/drive/folders/1KTfvLMTHYwTeSRWfMqMcAtCfHzvaKgV2?usp=sharing
+* Manual de usuario (ultima version 0200) y Manual tecnico(ultimna version 2000)  - https://drive.google.com/drive/folders/1KTfvLMTHYwTeSRWfMqMcAtCfHzvaKgV2?usp=sharing
 
 * [Enlace al repositorio de la API ] - https://github.com/Marcs202/skillsPlusBackend.git
