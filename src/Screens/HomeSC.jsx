@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   Modal,
@@ -20,205 +20,143 @@ import CustomDropdown from "../components/customdropdown";
 
 export default function HomeScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
-
-  const openModal = () => {
-    setModalVisible(true);
+  const [categoryValue, setCategoryValue] = useState(null);
+  const [departmentValue, setDepartmentValue] = useState(null);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const handleDropdownChange = (value) => {
+    console.log("categoria", value);
+    setCategoryValue(value);
+    const apiUrl = `http://140.84.176.85:3000/profesionales/proByCategory?categoria=${value}`;
+    if (value != undefined) {
+      fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(`Datos de la API: ${value}`, data);
+          setImages2(data);
+        })
+        .catch((error) => {
+          // Manejar errores de la petición
+          console.error("Error en la petición a la API:", error);
+        });
+    }
   };
 
-  const closeModal = () => {
-    setModalVisible(false);
+  const handleDropdownChangedep = (valuedep) => {
+    setDepartmentValue(valuedep);
+    console.log("departamento", valuedep);
+    const apiDep = `http://140.84.176.85:3000/profesionales/proByDepart?departamento=${valuedep}`;
+    console.log("departamento", valuedep);
+    if (valuedep != null) {
+      fetch(apiDep)
+        .then((response) => response.json())
+        .then((data) => {
+          // Manejar los datos de la API, por ejemplo, establecerlos en un estado
+          console.log(`Datos de la API: ${valuedep}`, data);
+          setImages2(data);
+        })
+        .catch((error) => {
+          // Manejar errores de la petición
+          console.error("Error en la petición a la API:", error);
+        });
+    } else {
+      useEffect(() => {
+        fetch("http://140.84.176.85:3000/profesionales/")
+          .then((response) => response.json())
+          .then((data) => {
+            setImages2(data);
+            console.log(data);
+          })
+          .catch((error) => console.error(error));
+      }, []);
+    }
   };
+
+  useEffect(() => {
+    if (categoryValue != null && departmentValue != null) {
+      console.log('1',categoryValue)
+      console.log('2',departmentValue)
+      const apiCombined = `http://140.84.176.85:3000/profesionales/proByCategoryDepartament?categoria=${categoryValue}&departamento=${departmentValue}`;
+      fetch(apiCombined)
+        .then((response) => response.json())
+        .then((data) => {
+          // Manejar los datos de la API, por ejemplo, establecerlos en un estado
+         // console.log(`Datos de la API: ${valuedep}`, data);
+          setImages2(data);
+        })
+        .catch((error) => {
+          // Manejar errores de la petición
+          console.error("Error en la petición a la API:", error);
+        });
+
+      setIsDataLoaded(true);
+    }
+  }, [categoryValue, departmentValue]);
+
+  const handlePerfil = (profesionalId, idUsuario) => {
+    navigation.navigate('perfil', { profesionalId, idUsuario });
+  };
+
+ 
+
+  const [images, setImages] = useState([]);
+  const [images2, setImages2] = useState([]);
+
+  useEffect(() => {
+    fetch("http://140.84.176.85:3000/categorias/")
+      .then((response) => response.json())
+      .then((data) => setImages(data))
+      .catch((error) => console.error(error));
+  }, []);
+
+  //para los perfiles
+
+  useEffect(() => {
+    fetch("http://140.84.176.85:3000/profesionales/")
+      .then((response) => response.json())
+      .then((data) => {
+        setImages2(data);
+        console.log('DATa de los perfiles',data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
   return (
     <ScrollView style={styles.contenedor}>
       <ScrollView horizontal>
-        <View>
-          <Image
-            source={require("../placeholderimgs/img1.jpg")}
-            style={styles.bubbleban}
-          />
-        </View>
-        <View>
-          <Image
-            source={require("../placeholderimgs/img2.jpg")}
-            style={styles.bubbleban}
-          />
-        </View>
-        <View>
-          <Image
-            source={require("../placeholderimgs/img3.jpg")}
-            style={styles.bubbleban}
-          />
-        </View>
-        <View>
-          <Image
-            source={require("../placeholderimgs/img4.jpg")}
-            style={styles.bubbleban}
-          />
-        </View>
-        <View>
-          <Image
-            source={require("../placeholderimgs/img5.jpg")}
-            style={styles.bubbleban}
-          />
-        </View>
+        {images.map((image, index) => (
+          <View key={index}>
+            <Image
+              source={{ uri: image.FOTO }} // Asegúrate de usar la URL correcta desde tus datos
+              style={styles.bubbleban}
+            />
+            <Text style={styles.title}>{image.NOMBRE}</Text>
+          </View>
+        ))}
       </ScrollView>
       <ScrollView>
         <View>
-          <CustomDropdown style={styles.dropdown}></CustomDropdown>
+          <CustomDropdown
+            onValueChange={handleDropdownChange}
+            onValueChangeDep={handleDropdownChangedep}
+            style={styles.dropdown}
+          ></CustomDropdown>
         </View>
-        <Text style={styles.titulo}>Servicios más contratados</Text>
+        <Text style={styles.titulo}>Perfiles más contratados</Text>
         <View style={styles.listado}>
-          <TouchableWithoutFeedback onPress={openModal}>
-            <View style={styles.listaItem}>
-              <Image
-                source={require("../placeholderimgs/img5.jpg")}
-                style={styles.bubbleban}
-              />
-            </View>
-          </TouchableWithoutFeedback>
-          <Modal
-            style={styles.modal}
-            visible={modalVisible}
-            animationType="slide"
-            transparent={true}
-            onRequestClose={closeModal}
-          >
-            <View style={styles.modalContainer}>
-              <View style={styles.modalHeader}>
-                {/* Contenido del encabezado */}
-                <Image
-                  source={require("../placeholderimgs/img5.jpg")}
-                  style={styles.modalImage}
-                />
-                <Text style={styles.headerText}>Título del Encabezado</Text>
-              </View>
-              <View style={styles.modalContent}>
-                {/* Contenido del modal */}
-                <Text style={styles.textModal}>
-                  Descripción de la imagen o cualquier otro contenido aquí.
-                </Text>
-                <Text style={styles.Precio}>Precio: $50</Text>
-                {/* Botones */}
-                <View style={styles.buttonContainer}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      alert("se envio solicitud de contratacion");
-                    }}
-                  >
-                    <Text style={styles.button}>Solicitar contratacion</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      /* Manejar acción del primer botón */
-                    }}
-                  >
-                    <Text style={styles.button}>Ver perfil</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
+          {images2.map((imageData, index) => (
             <TouchableWithoutFeedback
-              style={styles.buttonContainer}
-              onPress={closeModal}
+          
+              key={index}
+              onPress={() => handlePerfil(imageData.ID_Profesional, imageData.ID_Usuario)}
             >
-              <Text>Cerrar</Text>
+              <View style={styles.listaItem}>
+                <Image
+                  source={{ uri: imageData.Fotografia }} // Asegúrate de usar la URL de la imagen desde tus datos
+                  style={styles.bubbleban}
+                />
+              </View>
             </TouchableWithoutFeedback>
-          </Modal>
-          <TouchableWithoutFeedback onPress={openModal}>
-          <View style={styles.listaItem} onPress={openModal}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={openModal}>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          </TouchableWithoutFeedback>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
-          <View style={styles.listaItem}>
-            <Image
-              source={require("../placeholderimgs/img5.jpg")}
-              style={styles.bubbleban}
-            />
-          </View>
+          ))}
         </View>
       </ScrollView>
     </ScrollView>
@@ -231,6 +169,10 @@ const styles = StyleSheet.create({
     height: 80,
     marginRight: 10,
     borderRadius: 50,
+  },
+  title: {
+    textAlign: "center",
+    fontSize: 16,
   },
   Precio: {
     fontSize: 18,

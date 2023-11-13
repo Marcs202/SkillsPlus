@@ -3,6 +3,25 @@
     "name": "SkillPlus",
     "slug": "SkillPlus",
     "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./src/asset/splash.png",
+    "scheme": "Splash",
+    "useInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./src/asset/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff",
+      "marginLeft":"15",
+      "marginRight":"15"
+    },
+    "android":{
+      "adaptiveIcon":{
+        "foregroundImage": "./src/asset/splash.png",
+        "backgroundColor": "#ffffff",
+        "marginLeft":"15",
+        "marginRight":"15"
+      }
+    },
     "assetBundlePatterns": [
       "**/*"
     ]

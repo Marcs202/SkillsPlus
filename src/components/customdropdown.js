@@ -1,31 +1,67 @@
-import { SelectList } from 'react-native-dropdown-select-list'
-import React from 'react';
-import { Text,View, StyleSheet } from 'react-native';
+import { SelectList } from "react-native-dropdown-select-list";
+import React, { useEffect, useState } from "react";
+import { Text, View, StyleSheet } from "react-native";
 
-const CustomDropdown = () => {
+const CustomDropdown = ({ onValueChange, onValueChangeDep }) => {
+  const [selected, setSelected] = useState([]);
+  const [apiData, setApiData] = useState([]); // Estado para almacenar los datos de la API
 
-  const [selected, setSelected] = React.useState("");
+
+  useEffect(() => {
+    fetch("http://140.84.176.85:3000/categorias/")
+      .then((response) => response.json())
+      .then((data) => setApiData(data))
+      .catch((error) => console.error(error));
+  }, []);
+
+  useEffect(() => {
+    fetch("http://140.84.176.85:3000/departamentos/")
+      .then((response) => response.json())
+      .then((data) => setSelected(data))
+      .catch((error) => console.error(error));
+  }, []);
+
+
+
+  const selectData = Array.isArray(apiData) ? apiData.map((item) => ({ key: item.ID, value: item.NOMBRE })) : [];
+  const selectData2 = Array.isArray(selected) ? selected.map((item) => ({ key: item.ID, value: item.NOMBRE })) : [];
   
-  const data = [
-      {key:'1', value:'Mobiles'},
-      {key:'2', value:'Appliances'},
-      {key:'3', value:'Cameras'},
-      {key:'4', value:'Computers'},
-      {key:'5', value:'Vegetables'},
-      {key:'6', value:'Diary Products'},
-      {key:'7', value:'Drinks'},
-  ]
+  // console.log('Pruebas',selectData2)
+  // console.log('Pruebas',selectData)
 
-  return(
-    <SelectList 
-        setSelected={(val) => setSelected(val)} 
-        data={data} 
+  const handleValueChange = (value) => {
+    setApiData(value);
+    if (onValueChange) {
+      onValueChange(value); // Llama a la función de devolución de llamada con el valor seleccionado
+    }
+  };
+  const handleValueChangeDep = (value) => {
+    setSelected(value);
+    if (onValueChangeDep) {
+      onValueChangeDep(value); // Llama a la función de devolución de llamada con el valor seleccionado
+    }
+  };
+
+  return (
+    <>
+    <View style={{ flexDirection: 'row', marginTop:10}}>
+      <SelectList
+        setSelected={handleValueChange}
+        data={selectData}
         save="value"
-        boxStyles={{backgroundColor: 'white', marginTop: 30}}
-        dropdownStyles={{backgroundColor: 'white'}}
-    />
-  )
-
+        boxStyles={{  backgroundColor: "white", width: '50%', justifyContent:'space-between' }}
+        dropdownStyles={{ backgroundColor: "white",  }}
+      />
+      <SelectList
+        setSelected={handleValueChangeDep}
+        data={selectData2}
+        save="value"
+        boxStyles={{  backgroundColor: "white",  width: '50%', justifyContent:'space-between'  }}
+        dropdownStyles={{ backgroundColor: "white"  }}
+      />
+      </View>
+    </>
+  );
 };
 
 export default CustomDropdown;
