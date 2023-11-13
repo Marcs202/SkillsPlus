@@ -45,8 +45,8 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
     navigation.navigate("cambioProfesional", {screen: 'cambioProfesional'})
   };
 
-  const { userIdProfesional } = useGlobal();
-  const { userId } = useGlobal();
+  const { userIdProfesional, setUserIdProfesional } = useGlobal();
+  const { userId, setUserId } = useGlobal();
 
   //Perfil
   const [users, setUsers] = useState([]);
@@ -56,6 +56,18 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
       fetch(`http://140.84.176.85:3000/usuarios/usuario?id=${userId}`)
         .then((response) => response.json())
         .then((data) => setUsers(data))
+        .catch((error) => console.error(error));
+    }, [userId])
+  );
+
+  //Perfil Profesional
+  const [profesionals, setProfesionals] = useState([]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetch(`http://140.84.176.85:3000/usuarios/usuario?id=${userId}`)
+        .then((response) => response.json())
+        .then((data) => setProfesionals(data))
         .catch((error) => console.error(error));
     }, [userId])
   );
@@ -79,7 +91,7 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
         .catch((error) => {
           console.error("Error al obtener datos de la API:", error);
         });
-    }, [userIdProfesional, userId])
+    }, [userIdProfesional])
   );
 
   return (
@@ -99,7 +111,9 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
           type="font-awesome"
           color="#6F2C8C"
           size={30}
-          onPress={() => updateProfesional()}
+          onPress={() => {
+            toggleModal()
+          }}
         />
         <AntDesign
           name="team"
@@ -135,18 +149,38 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
         </Modal> */}
       </View>
 
-      <ScrollView>
-        <View style={styles.userContainer}>
-          <Image source={{ uri: users.Foto }} style={styles.perfil} />
-          <View style={styles.userInfo}>
-            <Text style={styles.name}>
-              {users.Nombre} {users.Apellido}
-            </Text>
-            <Text style={styles.email}>{users.Correo}</Text>
-          </View>
+      {userId == null && userIdProfesional == null ? (
+        <View style={styles.containerEmpty}>
+          <Text style={styles.centeredText}>
+            Por favor, inicia sesion dando click en el icono de las 2 personas
+          </Text>
         </View>
-
+      ) : userIdProfesional == null ? (
         <ScrollView>
+          <View style={styles.containerIn}>
+            <View style={styles.ClientBox}>
+              <Text style={styles.title}>
+                {users.Nombre} {users.Apellido}
+              </Text>
+              <View style={{ width: "70%", flexDirection: "row" }}>
+                <Text style={styles.descriptionIn}>{users.Correo}</Text>
+                <Image source={{ uri: users.Foto }} style={styles.serviceImg} />
+              </View>
+            </View>
+          </View>
+        </ScrollView>
+      ) : (
+        <ScrollView>
+          <View style={styles.userContainer}>
+            <Image source={{ uri: users.Foto }} style={styles.perfil} />
+            <View style={styles.userInfo}>
+              <Text style={styles.name}>
+                {users.Nombre} {users.Apellido}
+              </Text>
+              <Text style={styles.email}>{users.Correo}</Text>
+            </View>
+          </View>
+
           <View style={styles.containerIn}>
             {data.map((item) => (
               <View key={item.ID_Servicio} style={styles.serviceBox}>
@@ -167,18 +201,29 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
                     });
                   }}
                 >
-                  Contratacion
+                  Contrataciones
                 </Button>
               </View>
             ))}
           </View>
         </ScrollView>
-      </ScrollView>
+      )}
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  containerEmpty: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  centeredText: {
+    fontSize: 30,
+    textAlign: "center",
+    fontWeight: "bold",
+    color: "#6F2C8C",
+  },
   perfiltop: {
     display: "flex",
     flexDirection: "row",
@@ -229,7 +274,7 @@ const styles = StyleSheet.create({
     width: 110,
     height: 130,
     borderRadius: 10,
-    marginTop: "10%",
+    marginTop: '10%'
   },
   serviceBox: {
     borderWidth: 2,
@@ -244,8 +289,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#F5EDF9",
     borderRadius: 25,
-    width: 140,
+    width: 190,
     marginLeft: 45,
-    backgroundColor: "#722FE3",
-  },
+    backgroundColor: '#722FE3'
+  }
 });

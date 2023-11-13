@@ -14,8 +14,8 @@ import NotificationScreen from "./Screens/NotificationSC";
 import AddServices from "./Screens/agregarservicios";
 import EditServices from "./Screens/editarServicio";
 import Signin from "./Screens/Login/signin";
-import SignUp from './Screens/Login/signup';
-import newProfileScreen from './Screens/newPerfil';
+import SignUp from "./Screens/Login/signup";
+import newProfileScreen from "./Screens/newPerfil";
 import signinProfesionales from './Screens/Login/signinProfesional';
 //Nombre de las pantallas
 const homeName = "Inicio";
