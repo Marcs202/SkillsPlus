@@ -16,6 +16,7 @@ import EditServices from "./Screens/editarServicio";
 import Signin from "./Screens/Login/signin";
 import SignUp from './Screens/Login/signup';
 import newProfileScreen from './Screens/newPerfil';
+import signinProfesionales from './Screens/Login/signinProfesional';
 //Nombre de las pantallas
 const homeName = "Inicio";
 const detailsName = "Servicios";
@@ -82,6 +83,7 @@ export function MainContainer(){
                 <Stack.Screen name='Tab23' component={BTab} options={{ headerShown: false }}></Stack.Screen>
                 <Stack.Screen name="registrarse" component={SignUp}/>
                 <Stack.Screen name="perfil" component={newProfileScreen}/>
+                <Stack.Screen name="cambioProfesional" component={signinProfesionales}/>
 
             </Stack.Navigator>
         </NavigationContainer>
