@@ -117,15 +117,20 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
             style={styles.logoImg}
           />
           <View style={styles.userBox}>
-            <TouchableOpacity style={styles.addButton} onPress={handleLogin}>
-              <Text style={styles.centeredText}>Inicia Sesión aquí</Text>
+            <TouchableOpacity
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+              onPress={handleLogin}
+            >
+              <Text style={styles.name}>Log in</Text>
               <AntDesign
-                style={{ textAlign: "center" }}
+                style={{ marginLeft: 10 }}
                 name="team"
                 type="font-awesome"
                 color="#6F2C8C"
                 size={30}
-                marginRight={20}
               />
             </TouchableOpacity>
           </View>

@@ -32,36 +32,49 @@ export default function newProfileScreen({ isAuthenticated, userType }) {
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-  const handleLogin = () => {
-    navigation.navigate("login", { screen: "login" });
-  };
-
-  const handleLogout = () => {
-    try {
-      userIdProfesional.set(null); // Asigna un valor nulo a userIdProfesional
-      userId.set(null); // Asigna un valor nulo a userId
-      // Luego, redirige al usuario a la pantalla de inicio de sesión
-      navigation.navigate("login", { screen: "login" });
-    } catch (error) {
-      console.error("Error al cerrar sesión:", error);
-    }
-  };
-
-  const handleOptionSelect = (option) => {
-    setSelectedOption(option);
-    if (option === "Opción 1") {
-      updateDetailScreenVisibility(true);
-    } else {
-      updateDetailScreenVisibility(false);
-    }
-    toggleModal();
-  };
 
   const { userIdProfesional } = useGlobal();
-  //const { userId } = useGlobal();
+  const { userId } = useGlobal();
 
   //Perfil
   const [users, setUsers] = useState([]);
+
+  /* useFocusEffect(
+    React.useCallback(() => {
+      fetch(
+         `http://140.84.176.85:3000/contrataciones/clienteEspera?=${idUsuario}`
+      )
+        .then((response) => response.json())
+        .then((data) => setClients(data))
+        .catch((error) => console.error(error));
+    }, [idUsuario])
+  ); */
+  handleContract = (ID_Servicio) => {
+    const data = {
+      profesionalId: profesionalId,
+      contratistaId: userId,
+      servicioId: ID_Servicio,
+    };
+    console.log(data);
+    try {
+      const response = axios.post(
+        "http://140.84.176.85:3000/contrataciones/",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      alert("Contrato guardado con éxito");
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error al contratar", error);
+      alert("Error al contratar el servicio");
+    }
+    navigation.navigate("Notificaciones");
+  };
 
   useFocusEffect(
     React.useCallback(() => {
@@ -82,8 +95,10 @@ export default function newProfileScreen({ isAuthenticated, userType }) {
           `http://140.84.176.85:3000/servicios/?idProfesional=${profesionalId}`
         )
         .then((response) => {
+          console.log("trae: ", response.data);
           if (response.data && typeof response.data === "object") {
-            setDataApi(response.data); // Analizar solo si es un objeto válido
+            setDataApi(response.data);
+            console.log(response.setData);
           } else {
             console.error("Respuesta de la API no es un JSON válido.");
           }
@@ -118,11 +133,7 @@ export default function newProfileScreen({ isAuthenticated, userType }) {
               <Button
                 mode="contained"
                 style={styles.serviceBtn}
-                onPress={() => {
-                  navigation.navigate("Notificaciones", {
-                    screen: "Notificaciones",
-                  });
-                }}
+                onPress={() => handleContract(item.ID_Servicio)}
               >
                 Contratar
               </Button>
