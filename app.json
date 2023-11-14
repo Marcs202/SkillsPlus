@@ -11,20 +11,25 @@
       "image": "./src/asset/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff",
-      "marginLeft":"15",
-      "marginRight":"15"
+      "marginLeft": "15",
+      "marginRight": "15"
     },
-    "android":{
-      "adaptiveIcon":{
+    "android": {
+      "adaptiveIcon": {
         "foregroundImage": "./src/asset/splash.png",
         "backgroundColor": "#ffffff",
-        "marginLeft":"15",
-        "marginRight":"15"
+        "marginLeft": "15",
+        "marginRight": "15"
       }
     },
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "c9f6efa3-42f5-465f-a730-7f367df4fc7e"
+      }
+    }
   },
   "name": "SkillPlus"
 }

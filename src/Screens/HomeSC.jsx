@@ -79,8 +79,7 @@ export default function HomeScreen({ navigation }) {
       fetch(apiCombined)
         .then((response) => response.json())
         .then((data) => {
-          // Manejar los datos de la API, por ejemplo, establecerlos en un estado
-         // console.log(`Datos de la API: ${valuedep}`, data);
+          console.log(data)
           setImages2(data);
         })
         .catch((error) => {

@@ -33,10 +33,12 @@ const SignUp = () => {
     };
     launchImageLibrary(options, (response) => {
       setSelectedImage(response.assets[0].uri);
+      setSelectedImageName(response.assets[0].fileName)
       console.log("respondeeeeeeeeeeee", response);
     });
   };
   const [selectedImage, setSelectedImage] = useState("");
+  const [selectedImageName, setSelectedImageName] = useState("");
   const uploadService = async () => {
     const data = new FormData();
     data.append('nombre', username);
@@ -45,8 +47,8 @@ const SignUp = () => {
     data.append("pass", password);
     data.append("image", {
       uri: selectedImage,
-      type: "image/jpeg",
-      name: "image.jpg",
+      type: "image/*",
+      name: selectedImageName,
     });
 
     console.log("Data del post", data);
@@ -62,7 +64,7 @@ const SignUp = () => {
         }
       );
 
-      alert("Servicio guardado con éxito");
+      alert("Usuario registrado con éxito");
       console.log(response.data);
     } catch (error) {
       // Manejar cualquier error que ocurra durante la solicitud.

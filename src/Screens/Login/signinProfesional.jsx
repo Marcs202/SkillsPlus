@@ -3,11 +3,12 @@ import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { useGlobal } from "../../asset/valuesglobal";
+import axios from "axios";
 const signinProfesionales = () => {
   const [selected, setSelected] = useState([]);
   const [apiData, setApiData] = useState([]);
   const [selectedCategoriaId, setSelectedCategoriaId] = useState(null);
-  const [selectedDepartamentoId, setSelectedDepartamentoId] = useState(null);
+  const [selectedDepartamentoId, setSelectedDepartamentoId] = useState([]);
 
   const { userId } = useGlobal();
   useEffect(() => {
@@ -34,27 +35,30 @@ const signinProfesionales = () => {
     console.log('selectData',selectData)
 
     const handleValueChange = (id) => {
-        console.log('valueee',id)
-        // Obtener el ID de la categoría seleccionada
+        console.log('valueeeID',id)
+        
       setSelectedCategoriaId(id);
     
-        // Resto del código...
+       
       };
     
       const handleValueChangeDep = (value) => {
         console.log('valueee',value)
-        // Obtener el ID del departamento seleccionado
+      
        setSelectedDepartamentoId(value);
     
-        // Resto del código...
+        
       };
 
   const update = () => {
-    const data = new FormData();
-    // data.append('name', 'Nombre de ejemplo'); 
-     data.append('idUsuario', userId);
-     data.append('idCategoria', selectedCategoriaId);
-     data.append('idsDepartamento', selectedDepartamentoId);
+    console.log('sssss',selectedCategoriaId)
+    console.log('aaaaaa',selectedDepartamentoId)
+    
+    const data = {
+      idUsuario: userId,
+      idCategoria: selectedCategoriaId,
+      idsDepartamento: [selectedDepartamentoId],
+    };
 
      console.log('Data del post',data)
  
@@ -67,7 +71,6 @@ const signinProfesionales = () => {
        });
        
        alert('Se modifico el usuario a profesional');
-       console.log(response.data);
      } catch (error) {
        // Manejar cualquier error que ocurra durante la solicitud.
        console.error('Error al guardar el servicio', error);

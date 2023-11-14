@@ -72,6 +72,12 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
     }, [userId])
   );
 
+  
+ const toggleModal = () =>{
+  navigation.navigate("cambioProfesional", { screen: "cambioProfesional" });
+ }
+
+
   //Servicios
   const [data, setDataApi] = useState([]); // Aquí almacenaremos los datos de la API
 
@@ -124,29 +130,6 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
           onPress={handleLogin}
         />
 
-        {/* <Modal isVisible={isModalVisible}>
-          <View
-            style={{
-              backgroundColor: "white",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text>Selecciona un rol:</Text>
-
-            <CheckBox
-              label="Profesional"
-              checked={selectedOption === "Opción 1"}
-              onChange={() => handleOptionSelect("Opción 1")}
-            />
-            <CheckBox
-              label="Contratista"
-              checked={selectedOption === "Opción 2"}
-              onChange={() => handleOptionSelect("Opción 2")}
-            />
-            <Button title="Cerrar" onPress={toggleModal} />
-          </View>
-        </Modal> */}
       </View>
 
       {userId == null && userIdProfesional == null ? (

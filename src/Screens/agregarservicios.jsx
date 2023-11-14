@@ -11,18 +11,20 @@ export default function AddServices() {
     const [Titulo, setTitulo] = useState('');
     const [Desc, setDesc] = useState('');
     const [selectedImage, setSelectedImage] = useState(''); // Estado para almacenar la imagen seleccionada
+    const [selectedImageName, setSelectedImageName] = useState("");
 
     // Función para abrir el selector de imágenes
 
     const ImagePicker = () => {
         let options = {
             storageOptions:{
-                path:"image"
+                path:"image222"
             }
         }
         launchImageLibrary(options,response =>{
-            setSelectedImage(response.assets[0].uri)
-            console.log('respondeeeeeeeeeeee',response)
+            setSelectedImage(response.assets[0].uri);
+            setSelectedImageName(response.assets[0].fileName);
+            console.log('respondeeeeeeeeeeee',response);
         })
     }
 
@@ -35,8 +37,8 @@ export default function AddServices() {
       data.append('profesionalId', userIdProfesional); 
       data.append('image', {
         uri: selectedImage,
-        type: 'image/jpeg', 
-        name: 'image.jpg', 
+        type: 'image/*', 
+        name: selectedImageName, 
       }); 
 
       console.log('Data del post',data)
