@@ -1,29 +1,65 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import axios from 'axios';
+import { useGlobal } from "../asset/valuesglobal";
 
+import { useNavigation } from "@react-navigation/native";
 export default function AddServices() {
+  const navigation = useNavigation();
+  const { userIdProfesional } = useGlobal();
     const [Titulo, setTitulo] = useState('');
     const [Desc, setDesc] = useState('');
     const [selectedImage, setSelectedImage] = useState(''); // Estado para almacenar la imagen seleccionada
 
     // Función para abrir el selector de imágenes
 
-
-
     const ImagePicker = () => {
-
         let options = {
             storageOptions:{
                 path:"image"
             }
         }
-
         launchImageLibrary(options,response =>{
             setSelectedImage(response.assets[0].uri)
-            console.log(response)
+            console.log('respondeeeeeeeeeeee',response)
         })
     }
+
+    const uploadService = async () => {
+      
+      const data = new FormData();
+     // data.append('name', 'Nombre de ejemplo'); 
+      data.append('titulo', Titulo);
+      data.append('descripcion', Desc);
+      data.append('profesionalId', userIdProfesional); 
+      data.append('image', {
+        uri: selectedImage,
+        type: 'image/jpeg', 
+        name: 'image.jpg', 
+      }); 
+
+      console.log('Data del post',data)
+  
+      try {
+        
+        const response = await axios.post('http://140.84.176.85:3000/servicios/upload', data, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        
+        alert('Servicio guardado con éxito');
+        console.log(response.data);
+      } catch (error) {
+        // Manejar cualquier error que ocurra durante la solicitud.
+        console.error('Error al guardar el servicio', error);
+        alert('Error al guardar el servicio');
+      }
+      
+      navigation.navigate("homeName");
+    }
+
 
   return (
     <View style={styles.container}>
@@ -50,7 +86,7 @@ export default function AddServices() {
 
      <Image style={styles.selectedImage} source={{uri: selectedImage}}></Image>
 
-     <TouchableOpacity style={styles.addButton} onPress={() => {alert('Servicio guardado');}}>
+     <TouchableOpacity style={styles.addButton} onPress={uploadService}>
         <Text style={styles.addButtonText}>Guardar Servicio</Text>
      </TouchableOpacity>
     </View>
