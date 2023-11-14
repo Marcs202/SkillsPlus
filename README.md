@@ -20,7 +20,7 @@ sitio web.
 
 * Jeffrey Xavier Portillo Saravia - Mixjeff			
 
-* Marcos de Jesús Hernández Sorto - Marcs20
+* Marcos de Jesús Hernández Sorto - Marcs202
 
 * William Ernesto Rodríguez Reyes - williamre574					
 
@@ -58,7 +58,9 @@ No Comercial: Usted no puede hacer uso del material con propósitos comerciales.
 * [Tablero en Trello] - https://trello.com/b/2sEaj5wX/skills
 
 * [Enlace a Diseños en Mockups] - https://www.figma.com/file/TZP0oTCjTFkraE9KdX1DOC/skill-%2B?type=design&node-id=0%3A1&mode=design&t=GUcMeAnq3gxkXM9m-1
-  
+
+* [Enlace al APK del proyecto ] - https://drive.google.com/file/d/1OQjGpTokCtgXJST5BDoc68vzlOitK33U/view?usp=sharing
+
 * Manual de usuario (ultima version 0200) y Manual tecnico(ultimna version 2000)  - https://drive.google.com/drive/folders/1KTfvLMTHYwTeSRWfMqMcAtCfHzvaKgV2?usp=sharing
 
 * [Enlace al repositorio de la API ] - https://github.com/Marcs202/skillsPlusBackend.git
