@@ -30,7 +30,7 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
   const { userId, setUserId } = useGlobal();
 
   const toggleModal = () => {
-    setModalVisible(!isModalVisible);
+    navigation.navigate("cambioProfesional", { screen: "cambioProfesional" });
   };
   const handleLogin = () => {
     navigation.navigate("login", { screen: "login" });
@@ -51,15 +51,7 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
     fetchServices();
   }, [userId, userIdProfesional]);
 
-  const handleOptionSelect = (option) => {
-    setSelectedOption(option);
-    if (option === "Opción 1") {
-      updateDetailScreenVisibility(true);
-    } else {
-      updateDetailScreenVisibility(false);
-    }
-    toggleModal();
-  };
+
 
   //Perfil
   const [users, setUsers] = useState([]);
@@ -162,7 +154,7 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
             <Text
               style={{ color: "#6F2C8C" }}
               onPress={() => {
-                alert("Debe cambiar a Profesional");
+                toggleModal()
               }}
             >
               Cambio a Profesional

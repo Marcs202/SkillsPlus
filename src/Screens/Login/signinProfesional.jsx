@@ -4,12 +4,13 @@ import { Text, View, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { useGlobal } from "../../asset/valuesglobal";
 import axios from "axios";
+import {useNavigation,} from "@react-navigation/native"
 const signinProfesionales = () => {
   const [selected, setSelected] = useState([]);
   const [apiData, setApiData] = useState([]);
   const [selectedCategoriaId, setSelectedCategoriaId] = useState(null);
   const [selectedDepartamentoId, setSelectedDepartamentoId] = useState([]);
-
+  const navigation = useNavigation();
   const { userId } = useGlobal();
   useEffect(() => {
     fetch("http://140.84.176.85:3000/categorias/")
@@ -76,6 +77,7 @@ const signinProfesionales = () => {
        console.error('Error al guardar el servicio', error);
        alert('Error al modificar usuario el servicio');
      }
+     navigation.navigate("login", { screen: "login" });
      
   }
 
