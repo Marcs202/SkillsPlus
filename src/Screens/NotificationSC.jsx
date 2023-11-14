@@ -144,6 +144,7 @@ export default function NotificationScreen({ navigation }) {
       console.error("Error al aceptar el servicio", error);
       alert("Error al aceptar el servicio");
     }
+    navigation.navigate("homeName");
   };
 
   const declineService = async (ContratacionID) => {
@@ -167,6 +168,7 @@ export default function NotificationScreen({ navigation }) {
       console.error("Error al rechazar el servicio", error);
       alert("Error al rechazar el servicio");
     }
+    navigation.navigate("homeName");
   };
 
   const finishService = async (ContratacionID) => {
