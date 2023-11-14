@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   Text,
@@ -19,11 +19,15 @@ import Modal from "react-native-modal";
 import CheckBox from "react-native-checkbox";
 import axios from "axios";
 import { useGlobal } from "../asset/valuesglobal";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ProfileScreen({ isAuthenticated, userType }) {
   const navigation = useNavigation();
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
+
+  const { userIdProfesional, setUserIdProfesional } = useGlobal();
+  const { userId, setUserId } = useGlobal();
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -34,15 +38,18 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
 
   const handleLogout = () => {
     try {
-      setUserId("");
-      setUserIdProfesional("");
-      if (userId == "" && userIdProfesional == "") {
-        navigation.navigate("login", { screen: "login" });
-      }
+      setUserId(null);
+      setUserIdProfesional(null);
+
+      navigation.navigate("homeName", { screen: "homeName" });
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
     }
   };
+  useEffect(() => {
+    fetchUserInfo();
+    fetchServices();
+  }, [userId, userIdProfesional]);
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
@@ -54,139 +61,145 @@ export default function ProfileScreen({ isAuthenticated, userType }) {
     toggleModal();
   };
 
-  const { userIdProfesional, setUserIdProfesional } = useGlobal();
-  const { userId, setUserId } = useGlobal();
-
   //Perfil
   const [users, setUsers] = useState([]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      fetch(`http://140.84.176.85:3000/usuarios/usuario?id=${userId}`)
-        .then((response) => response.json())
-        .then((data) => setUsers(data))
-        .catch((error) => console.error(error));
-    }, [userId])
-  );
+  const fetchUserInfo = useCallback(() => {
+    fetch(`http://140.84.176.85:3000/usuarios/usuario?id=${userId}`)
+      .then((response) => response.json())
+      .then((data) => setUsers(data))
+      .catch((error) => console.error(error));
+  }, [userId]);
 
   //Perfil Profesional
   const [profesionals, setProfesionals] = useState([]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      fetch(`http://140.84.176.85:3000/usuarios/usuario?id=${userId}`)
-        .then((response) => response.json())
-        .then((data) => setProfesionals(data))
-        .catch((error) => console.error(error));
-    }, [userId])
-  );
+  const fetchProfeInfo = useCallback(() => {
+    fetch(`http://140.84.176.85:3000/usuarios/usuario?id=${userId}`)
+      .then((response) => response.json())
+      .then((data) => setProfesionals(data))
+      .catch((error) => console.error(error));
+  }, [userId]);
 
   //Servicios
   const [data, setDataApi] = useState([]); // Aquí almacenaremos los datos de la API
 
-  useFocusEffect(
-    React.useCallback(() => {
-      axios
-        .get(
-          `http://140.84.176.85:3000/servicios/?idProfesional=${userIdProfesional}`
-        )
-        .then((response) => {
-          if (response.data && typeof response.data === "object") {
-            setDataApi(response.data); // Analizar solo si es un objeto válido
-          } else {
-            console.error("Respuesta de la API no es un JSON válido.");
-          }
-        })
-        .catch((error) => {
-          console.error("Error al obtener datos de la API:", error);
-        });
-    }, [userIdProfesional])
-  );
+  const fetchServices = useCallback(() => {
+    axios
+      .get(
+        `http://140.84.176.85:3000/servicios/?idProfesional=${userIdProfesional}`
+      )
+      .then((response) => {
+        if (response.data && typeof response.data === "object") {
+          setDataApi(response.data); // Analizar solo si es un objeto válido
+        } else {
+          console.error("Respuesta de la API no es un JSON válido.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error al obtener datos de la API:", error);
+      });
+  }, [userIdProfesional]);
+  useEffect(() => {
+    fetchUserInfo();
+    fetchProfeInfo();
+    fetchServices();
+  }, [fetchUserInfo, fetchProfeInfo, fetchServices]);
 
   return (
     <>
-      <View style={styles.perfiltop}>
-        <AntDesign
-          style={{ paddingRight: 20, marginLeft: 250 }}
-          name="deleteuser"
-          type="font-awesome"
-          size={30}
-          color="#6F2C8C"
-          onPress={handleLogout}
-        />
-        <AntDesign
-          style={{ marginRight: 20 }}
-          name="swap"
-          type="font-awesome"
-          color="#6F2C8C"
-          size={30}
-          onPress={() => {
-            toggleModal();
-          }}
-        />
-        <AntDesign
-          name="team"
-          type="font-awesome"
-          color="#6F2C8C"
-          size={30}
-          marginRight={20}
-          onPress={handleLogin}
-        />
-
-        <Modal isVisible={isModalVisible}>
-          <View
-            style={{
-              backgroundColor: "white",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text>Selecciona un rol:</Text>
-
-            <CheckBox
-              label="Profesional"
-              checked={selectedOption === "Opción 1"}
-              onChange={() => handleOptionSelect("Opción 1")}
-            />
-            <CheckBox
-              label="Contratista"
-              checked={selectedOption === "Opción 2"}
-              onChange={() => handleOptionSelect("Opción 2")}
-            />
-            <Button title="Cerrar" onPress={toggleModal} />
-          </View>
-        </Modal>
-      </View>
-
       {userId == null && userIdProfesional == null ? (
         <View style={styles.containerEmpty}>
-          <Text style={styles.centeredText}>
-            Por favor, inicia sesion dando click en el icono de las 2 personas
-          </Text>
+          <Image
+            source={{
+              uri: "https://axjm5wci2rqn.objectstorage.mx-queretaro-1.oci.customer-oci.com/n/axjm5wci2rqn/b/skillsImages/o/splash.png",
+            }}
+            style={styles.logoImg}
+          />
+          <View style={styles.userBox}>
+            <TouchableOpacity style={styles.addButton} onPress={handleLogin}>
+              <Text style={styles.centeredText}>Inicia Sesión aquí</Text>
+              <AntDesign
+                style={{ textAlign: "center" }}
+                name="team"
+                type="font-awesome"
+                color="#6F2C8C"
+                size={30}
+                marginRight={20}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
       ) : userIdProfesional == null ? (
         <ScrollView>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <AntDesign
+              style={{ marginRight: 10, marginLeft: 20 }}
+              name="deleteuser"
+              type="font-awesome"
+              size={30}
+              color="#6F2C8C"
+              onPress={handleLogout}
+            />
+            <Text style={{ color: "#6F2C8C" }} onPress={handleLogout}>
+              Cerrar Sesión
+            </Text>
+            <AntDesign
+              style={{ marginRight: 10, marginLeft: 60 }}
+              name="swap"
+              type="font-awesome"
+              color="#6F2C8C"
+              size={30}
+              onPress={() => {
+                toggleModal();
+              }}
+            />
+            <Text
+              style={{ color: "#6F2C8C" }}
+              onPress={() => {
+                alert("Debe cambiar a Profesional");
+              }}
+            >
+              Cambio a Profesional
+            </Text>
+          </View>
+
           <View style={styles.containerIn}>
+            <Text style={styles.nameUser}>Informacion del Perfil</Text>
             <View style={styles.ClientBox}>
-              <Text style={styles.title}>
-                {users.Nombre} {users.Apellido}
-              </Text>
-              <View style={{ width: "70%", flexDirection: "row" }}>
-                <Text style={styles.descriptionIn}>{users.Correo}</Text>
-                <Image source={{ uri: users.Foto }} style={styles.serviceImg} />
-              </View>
+              <Text style={styles.name}>Nombre: </Text>
+              <Text style={styles.infoLabel}>{users.Nombre}</Text>
+              <Text style={styles.name}>Apellido: </Text>
+              <Text style={styles.infoLabel}>{users.Apellido}</Text>
+              <Text style={styles.name}>Correo:</Text>
+              <Text style={styles.infoLabel}>{users.Correo}</Text>
+              <Text style={styles.name}>Foto de Perfil:</Text>
+              <Image source={{ uri: users.Foto }} style={styles.userImg} />
             </View>
           </View>
         </ScrollView>
       ) : (
         <ScrollView>
           <View style={styles.userContainer}>
-            <Image source={{ uri: users.Foto }} style={styles.perfil} />
+            <Image source={{ uri: profesionals.Foto }} style={styles.perfil} />
             <View style={styles.userInfo}>
               <Text style={styles.name}>
-                {users.Nombre} {users.Apellido}
+                {profesionals.Nombre} {profesionals.Apellido}
               </Text>
-              <Text style={styles.email}>{users.Correo}</Text>
+              <Text style={styles.email}>{profesionals.Correo}</Text>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <AntDesign
+                  style={{ marginRight: 10 }}
+                  name="deleteuser"
+                  type="font-awesome"
+                  size={30}
+                  color="#6F2C8C"
+                  onPress={handleLogout}
+                />
+                <Text style={{ color: "#6F2C8C" }} onPress={handleLogout}>
+                  Cerrar Sesión
+                </Text>
+              </View>
             </View>
           </View>
 
@@ -246,6 +259,12 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 10,
   },
+  infoLabel: {
+    flex: 1,
+    marginLeft: 75,
+    fontWeight: "400",
+    fontSize: 20,
+  },
   perfil: {
     width: 80,
     height: 80,
@@ -256,6 +275,14 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "bold",
     color: "#6F2C8C",
+    paddingTop: 5,
+  },
+  nameUser: {
+    fontSize: 25,
+    fontWeight: "bold",
+    color: "#6F2C8C",
+    marginTop: 20,
+    textAlign: "center",
   },
   email: {
     fontSize: 16,
@@ -285,6 +312,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: "10%",
   },
+  userImg: {
+    width: 110,
+    height: 130,
+    borderRadius: 10,
+    marginTop: "10%",
+    padding: 15,
+    marginTop: 20,
+    justifyContent: "center",
+    marginLeft: "30%",
+  },
   serviceBox: {
     borderWidth: 2,
     borderColor: "#AA92CE" /* #722FE3 */,
@@ -307,8 +344,25 @@ const styles = StyleSheet.create({
     borderColor: "#AA92CE" /* #722FE3 */,
     borderStyle: "dotted",
     borderRadius: 10 /* #D4E6F1 */,
-    marginTop: 100,
-    paddingBottom: 20,
+    marginTop: 60,
+    padding: 15,
     backgroundColor: "#F5EDF9",
+  },
+  userBox: {
+    marginLeft: 15,
+    marginRight: 15,
+    marginBottom: 50,
+    borderWidth: 2,
+    borderColor: "#AA92CE" /* #722FE3 */,
+    borderStyle: "dotted",
+    borderRadius: 10 /* #D4E6F1 */,
+    padding: 15,
+    backgroundColor: "#F5EDF9",
+  },
+  logoImg: {
+    width: 350,
+    height: 130,
+    marginBottom: 50,
+    justifyContent: "center",
   },
 });
